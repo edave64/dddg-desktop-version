@@ -1,0 +1,1 @@
+To use this project, you first need to check out the [Doki Doki Dialog Generator](https://github.com/edave64/Doki-Doki-Dialog-Generator), then build it using `npm build:electron` and place the resulting `dist` folder into this folder under the name `dddgWeb`.

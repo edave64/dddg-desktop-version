@@ -1,0 +1,62 @@
+{
+	"name": "dddg-desktop-version",
+	"version": "2.2.0",
+	"description": "The desktop version of DDDG",
+	"main": "main.js",
+	"scripts": {
+		"postinstall": "electron-builder install-app-deps",
+		"test": "npm run lint",
+		"start": "electron .",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder --macos --linux --windows",
+		"release": "np",
+		"np": "^5.0.3"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/edave64/dddg-desktop-version.git"
+	},
+	"author": "edave64",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/edave64/dddg-desktop-version/issues"
+	},
+	"homepage": "https://github.com/edave64/dddg-desktop-version#readme",
+	"devDependencies": {
+		"electron": "^11.1.1",
+		"electron-builder": "^22.9.1"
+  },
+	"dependencies": {
+		"electron-updater": "^4.3.5"
+	},
+	"build": {
+		"appId": "org.xcvbnm.dddg",
+		"productName": "Doki Doki Dialog Generator",
+		"mac": {
+			"category": "public.app-category.games",
+			"darkModeSupport": false
+		},
+		"dmg": {
+			"iconSize": 160,
+			"contents": [
+				{
+					"x": 180,
+					"y": 170
+				},
+				{
+					"x": 480,
+					"y": 170,
+					"type": "link",
+					"path": "/Applications"
+				}
+			]
+		},
+		"linux": {
+			"target": [
+				"AppImage",
+				"deb"
+			],
+			"category": "Game;Graphics"
+		}
+	}
+}
