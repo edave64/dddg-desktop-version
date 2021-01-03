@@ -25,14 +25,18 @@ function createWindow() {
 			navigateOnDragDrop: false,
 			autoplayPolicy: 'document-user-activation-required',
 		},
+		show: false,
 		closable: true,
 		darkTheme: false,
+		paintWhenInitiallyHidden: true,
 	});
-
-	mainWindow.webContents.openDevTools();
 
 	// and load the index.html of the app.
 	mainWindow.loadFile('dddgWeb/index.html');
+
+	mainWindow.once('ready-to-show', () => {
+		mainWindow.show();
+	});
 
 	// Open the DevTools.
 	// mainWindow.webContents.openDevTools()
