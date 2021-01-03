@@ -2,14 +2,21 @@
 // private scope that can access a subset of Electron renderer APIs. We must be
 // careful to not leak any objects into the global scope!
 const { ipcRenderer } = require('electron');
+const { contextBridge } = require('electron');
 
-window.isElectron = true;
+require = null;
 
-const channelWhitelist = [];
+const channelWhitelist = [
+	'add-persistent-content-pack',
+	'add-persistent-background',
+	'push-message',
+	'prompt-answered',
+	'update-ready',
+	'find-customs',
+];
 
-// Abstract the IPC object. This way we don't leak the the native ipcRenderer,
-// instance further minimizing the attack surface
-window.ipcRenderer = {
+contextBridge.exposeInMainWorld('isElectron', {});
+contextBridge.exposeInMainWorld('ipcRenderer', {
 	on(channel, listener) {
 		if (!channelWhitelist.includes(channel))
 			throw new Error(
@@ -24,4 +31,4 @@ window.ipcRenderer = {
 			);
 		ipcRenderer.send(channel, ...args);
 	},
-};
+});

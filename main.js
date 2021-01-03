@@ -2,7 +2,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
-//app.enableSandbox();
+app.enableSandbox();
 
 function createWindow() {
 	// Create the browser window.
@@ -11,16 +11,22 @@ function createWindow() {
 		height: 768,
 		webPreferences: {
 			preload: path.join(app.getAppPath(), 'preload.js'),
-			//contextIsolation: true,
-			//sandbox: true,
-			//enableWebSQL: false,
-			//enableRemoteModule: false,
+			contextIsolation: true,
+			enableWebSQL: false,
+			enableRemoteModule: false,
 			nodeIntegration: false,
-			//nodeIntegrationInSubFrames: false,
-			//nodeIntegrationInWorker: false,
+			nodeIntegrationInSubFrames: false,
+			nodeIntegrationInWorker: false,
 			devTools: true,
+			webgl: false,
+			defaultEncoding: 'utf-8',
+			worldSafeExecuteJavaScript: false,
+			webviewTag: false,
+			navigateOnDragDrop: false,
+			autoplayPolicy: 'document-user-activation-required',
 		},
 		closable: true,
+		darkTheme: false,
 	});
 
 	mainWindow.webContents.openDevTools();
