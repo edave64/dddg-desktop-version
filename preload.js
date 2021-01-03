@@ -3,19 +3,25 @@
 // careful to not leak any objects into the global scope!
 const { ipcRenderer } = require('electron');
 
-window.isElectron = true;;
+window.isElectron = true;
 
 const channelWhitelist = [];
 
 // Abstract the IPC object. This way we don't leak the the native ipcRenderer,
 // instance further minimizing the attack surface
 window.ipcRenderer = {
-    on(channel, listener) {
-        if (!channelWhitelist.includes(channel)) throw new Error(`Security Exception: IPC channel '${channel}' is not on the whitelist!`);
-        ipcRenderer.on(channel, listener)
-    },
-    send(channel, ...args) {
-        if (!channelWhitelist.includes(channel)) throw new Error(`Security Exception: IPC channel '${channel}' is not on the whitelist!`);
-        ipcRenderer.send(channel, ...args);
-    }
-}
+	on(channel, listener) {
+		if (!channelWhitelist.includes(channel))
+			throw new Error(
+				`Security Exception: IPC channel '${channel}' is not on the whitelist!`
+			);
+		ipcRenderer.on(channel, listener);
+	},
+	send(channel, ...args) {
+		if (!channelWhitelist.includes(channel))
+			throw new Error(
+				`Security Exception: IPC channel '${channel}' is not on the whitelist!`
+			);
+		ipcRenderer.send(channel, ...args);
+	},
+};

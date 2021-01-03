@@ -8,9 +8,8 @@
 		"test": "npm run lint",
 		"start": "electron .",
 		"pack": "electron-builder --dir",
-		"dist": "electron-builder --macos --linux --windows",
-		"release": "np",
-		"np": "^5.0.3"
+		"dist": "electron-builder --windows",
+		"release": "np"
 	},
 	"repository": {
 		"type": "git",
@@ -24,8 +23,10 @@
 	"homepage": "https://github.com/edave64/dddg-desktop-version#readme",
 	"devDependencies": {
 		"electron": "^11.1.1",
-		"electron-builder": "^22.9.1"
-  },
+		"electron-builder": "^22.9.1",
+		"np": "^5.0.3",
+		"prettier": "^2.1.2"
+	},
 	"dependencies": {
 		"electron-updater": "^4.3.5"
 	},
@@ -53,8 +54,7 @@
 		},
 		"linux": {
 			"target": [
-				"AppImage",
-				"deb"
+				"AppImage"
 			],
 			"category": "Game;Graphics"
 		}
