@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const { configPath } = require('./constants');
+const { configPath, basePath } = require('./constants');
 
 const baseConfig = {
-	downloadPath: path.join(__dirname, '../panels/'),
+	downloadPath: path.join(basePath, './panels/'),
 	autoUpdateCheck: true,
 	autoLoad: [],
 };
