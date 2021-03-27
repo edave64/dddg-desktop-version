@@ -142,9 +142,7 @@ module.exports = {
 		win.webContents.on('will-attach-webview', (e) => e.preventDefault());
 
 		win.on('focus', function () {
-			console.log('as');
 			if (!IPC.ready) return;
-			console.log('erg');
 			triggerBackgroundWatcher();
 			triggerSpriteWatcher();
 		});

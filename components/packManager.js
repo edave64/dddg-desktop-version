@@ -211,15 +211,6 @@ function importImage(packBaseUrl, packBasePath, path) {
 				const stream = fs.createWriteStream(targetPath, { flags: 'w' });
 
 				stream.on('error', (err) => {
-					console.log(
-						packBaseUrl,
-						packBasePath,
-						path,
-						requestUrl,
-						retPath,
-						targetPath
-					);
-					debugger;
 					reject(err);
 				});
 
