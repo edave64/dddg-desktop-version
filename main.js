@@ -12,6 +12,12 @@ app.whenReady().then(() => {
 });
 
 async function main() {
+	const currentConfig = require('./components/config').getConfig();
+	if (currentConfig.autoUpdateCheck) {
+		const { autoUpdater } = require('electron-updater');
+		autoUpdater.checkForUpdatesAndNotify();
+	}
+
 	const server = require('./components/server.js');
 	const ipc = require('./components/ipc.js');
 	const window = require('./components/window.js');
