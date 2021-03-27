@@ -1,11 +1,10 @@
 //const fetch = require('node-fetch');
 const IPC = require('./ipc');
 const { dirname, join, basename } = require('path');
-const { characterPath, localRepoPath } = require('./constants');
-const { promisify } = require('util');
+const { localRepoPath } = require('./constants');
 const http = require('https');
 const fs = require('fs');
-const mkdirp = promisify(require('mkdirp'));
+const mkdirp = require('mkdirp');
 const crypto = require('crypto');
 const sha256 = crypto.createHash('sha256');
 const del = require('del');
