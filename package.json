@@ -28,7 +28,14 @@
 		"prettier": "^2.1.2"
 	},
 	"dependencies": {
-		"electron-updater": "^4.3.5"
+		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0-alpha.28",
+		"await-lock": "^2.1.0",
+		"deepmerge": "^4.2.2",
+		"electron-updater": "^4.3.5",
+		"express": "^4.17.1",
+		"chokidar": "^3.5.1",
+		"mkdirp": "^1.0.4",
+		"del": "^6.0.0"
 	},
 	"build": {
 		"appId": "org.xcvbnm.dddg",
