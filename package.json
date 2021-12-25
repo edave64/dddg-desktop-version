@@ -31,12 +31,14 @@
 	"dependencies": {
 		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0-alpha.28",
 		"await-lock": "^2.1.0",
+		"chokidar": "^3.5.1",
 		"deepmerge": "^4.2.2",
+		"del": "^6.0.0",
 		"electron-updater": "^4.3.5",
 		"express": "^4.17.1",
-		"chokidar": "^3.5.1",
+		"http-proxy-middleware": "^2.0.1",
 		"mkdirp": "^1.0.4",
-		"del": "^6.0.0"
+		"request": "^2.88.2"
 	},
 	"build": {
 		"appId": "org.xcvbnm.dddg",

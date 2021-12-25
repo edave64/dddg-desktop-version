@@ -29,6 +29,29 @@ const IPC = {
 	reloadLocalRepo() {
 		send('reload-repo');
 	},
+	update: {
+		/**
+		 * @param {string} version
+		 */
+		currentVersion(version) {
+			send('update.current-version', version);
+		},
+		/**
+		 * @param {string} version
+		 */
+		versionAvailable(version) {
+			send('update.available-version', version);
+		},
+		/**
+		 * @param {number|'done'} percentage
+		 */
+		progress(percentage) {
+			send('update.progress', percentage);
+		},
+		checkStopped() {
+			send('update.checkStopped', percentage);
+		},
+	},
 	/**
 	 * @param {string[]} ids
 	 */

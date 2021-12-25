@@ -1,8 +1,7 @@
 // This file is loaded whenever a javascript context is created. It runs in a
 // private scope that can access a subset of Electron renderer APIs. We must be
 // careful to not leak any objects into the global scope!
-const { ipcRenderer } = require('electron');
-const { contextBridge } = require('electron');
+const { ipcRenderer, contextBridge } = require('electron');
 
 require = null;
 
@@ -11,7 +10,10 @@ const channelWhitelist = [
 	'add-persistent-background',
 	'push-message',
 	'prompt-answered',
-	'update-ready',
+	'update.current-version',
+	'update.available-version',
+	'update.progress',
+	'update.checkStopped',
 	'config.get',
 	'config.set',
 	'config.downloadFolderUpdate',
@@ -27,6 +29,7 @@ const channelWhitelist = [
 	'init-dddg',
 	'replace-pack',
 	'save-file',
+	'reload',
 ];
 
 let currentConvoId = 0;

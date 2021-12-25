@@ -2,7 +2,7 @@ const express = require('express');
 const constants = require('./constants');
 const { port } = require('./constants');
 const { join } = require('path');
-const http = require('http');
+//const proxy = require('http-proxy-middleware');
 const fs = require('fs');
 const deepmerge = require('deepmerge');
 const server = express();
@@ -29,6 +29,7 @@ async function loadRepoFiles() {
 					const repoFile = await fsp.readFile(join(packFolder, 'repo.json'));
 					return JSON.parse(repoFile);
 				} catch (e) {
+					console.log('No repo', folder, e);
 					return null;
 				}
 			})
@@ -65,19 +66,9 @@ server.use('/repo/people.json', async (req, res) => {
 server.use('/custom_backgrounds', express.static(constants.backgroundsPath));
 server.use('/custom_sprites', express.static(constants.spritesPath));
 server.use(express.static(join(__dirname, '../dddgWeb/')));
-/*server.all('/*', function (req, res) {
-	http
-		.request({
-			hostname: 'localhost',
-			port: 8080,
-			path: req.params[0],
-			search: req.query,
-			method: req.method,
-		})
-		.on('response', (res) => {
-			req.pipe(res);
-		});
-});*/
+/*server.use(
+	proxy.createProxyMiddleware('/', { target: 'http://localhost:3000/' })
+);*/
 
 var serverLoaded;
 

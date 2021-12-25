@@ -1,7 +1,6 @@
 const { app, Menu, BrowserWindow, shell, nativeTheme } = require('electron');
 const path = require('path');
 const url = require('url');
-const ipc = require('./ipc');
 const { port } = require('./constants');
 const IPC = require('./ipc');
 const {
@@ -43,6 +42,7 @@ function create_menus() {
 	Menu.setApplicationMenu(menu);
 }
 
+/** @type {BrowserWindow} */
 let win;
 
 module.exports = {
@@ -145,6 +145,10 @@ module.exports = {
 			if (!IPC.ready) return;
 			triggerBackgroundWatcher();
 			triggerSpriteWatcher();
+		});
+
+		IPC.on('reload', () => {
+			win.reload();
 		});
 	},
 

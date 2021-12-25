@@ -1,10 +1,7 @@
 const { app } = require('electron');
-const { statSync } = require('fs');
 const { join } = require('path');
 
 let contentPath = app.getPath('userData');
-
-console.log('basePath', contentPath);
 
 module.exports = Object.freeze({
 	basePath: contentPath,
