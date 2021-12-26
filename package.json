@@ -1,6 +1,6 @@
 {
 	"name": "dddg-desktop-version",
-	"version": "2.3.0-0",
+	"version": "2.3.0",
 	"description": "The desktop version of DDDG",
 	"main": "main.js",
 	"scripts": {
