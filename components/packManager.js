@@ -8,7 +8,6 @@ const mkdirp = require('mkdirp');
 const crypto = require('crypto');
 const sha256 = crypto.createHash('sha256');
 const del = require('del');
-const constants = require('./constants');
 
 const { walkPackImages } = require('./packHelpers');
 
@@ -23,22 +22,27 @@ module.exports = {
 		await contentPackLock.acquireAsync();
 		try {
 			const uninstalls = [];
-			const dirs = await fsp.readdir(constants.repo);
-			for (const dir of dirs) {
-				const repoDir = join(constants.repo, dir);
-				try {
-					// If that file exists, we didn't get to finish installing the content pack
-					// delete it, just to be safe.
-					await fsp.stat(join(repoDir, '.incomplete'));
-					uninstalls.push(
-						(async () => {
-							try {
-								await del(repoDir);
-							} catch (e) {}
-						})()
-					);
-				} catch (e) {}
-			}
+			const dirs = await fsp.readdir(localRepoPath);
+			await Promise.all(
+				dirs.map(async (dir) => {
+					const repoDir = join(localRepoPath, dir);
+					try {
+						// If that file exists, we didn't get to finish installing the content pack
+						// delete it, just to be safe.
+						const a = join(repoDir, '.incomplete');
+						await fsp.stat(a);
+						uninstalls.push(
+							(async () => {
+								try {
+									await del(repoDir, { force: true });
+								} catch (e) {
+									console.error(e);
+								}
+							})()
+						);
+					} catch (e) {}
+				})
+			);
 			await Promise.all(uninstalls);
 		} finally {
 			contentPackLock.release();

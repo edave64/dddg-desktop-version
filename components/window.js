@@ -3,6 +3,7 @@ const path = require('path');
 const url = require('url');
 const { port } = require('./constants');
 const IPC = require('./ipc');
+const { deleteIncompleteInstalls } = require('./packManager');
 const {
 	triggerSpriteWatcher,
 	triggerBackgroundWatcher,
@@ -15,8 +16,17 @@ app.on('ready', function () {
 	create_menus();
 });
 
-app.on('window-all-closed', function () {
-	app.quit();
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', async function () {
+	try {
+		await deleteIncompleteInstalls();
+	} catch (e) {
+		console.error(e);
+	}
+	console.log('quitting.');
+	if (process.platform !== 'darwin') app.quit();
 });
 
 function create_menus() {
