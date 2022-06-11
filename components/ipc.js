@@ -73,6 +73,14 @@ const IPC = {
 		sendConvo('replace-pack', pack);
 	},
 	/**
+	 * @param {string} message
+	 * @param {string[]} answers
+	 * @returns {Promise<string>}
+	 */
+	async resolvableError(message, answers) {
+		return await sendConvo('resolvable-error', message, answers);
+	},
+	/**
 	 * @param {string} name
 	 * @param {Function} callback
 	 */

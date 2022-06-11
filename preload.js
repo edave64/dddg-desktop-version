@@ -28,6 +28,7 @@ const channelWhitelist = [
 	'reload-repo',
 	'init-dddg',
 	'replace-pack',
+	'resolvable-error',
 	'save-file',
 	'reload',
 ];

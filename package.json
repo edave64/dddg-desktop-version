@@ -1,6 +1,6 @@
 {
 	"name": "dddg-desktop-version",
-	"version": "2.3.0",
+	"version": "2.3.2",
 	"description": "The desktop version of DDDG",
 	"main": "main.js",
 	"scripts": {
@@ -23,20 +23,20 @@
 	},
 	"homepage": "https://github.com/edave64/dddg-desktop-version#readme",
 	"devDependencies": {
-		"electron": "^11.1.1",
-		"electron-builder": "^22.9.1",
-		"np": "^5.0.3",
-		"prettier": "^2.1.2"
+		"electron": "^19.0.4",
+		"electron-builder": "^23.0.3",
+		"np": "^7.6.1",
+		"prettier": "^2.6.2"
 	},
 	"dependencies": {
-		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0-alpha.28",
-		"await-lock": "^2.1.0",
-		"chokidar": "^3.5.1",
+		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0",
+		"await-lock": "^2.2.2",
+		"chokidar": "^3.5.3",
 		"deepmerge": "^4.2.2",
-		"del": "^6.0.0",
-		"electron-updater": "^4.3.5",
-		"express": "^4.17.1",
-		"http-proxy-middleware": "^2.0.1",
+		"del": "^6.1.1",
+		"electron-updater": "^5.0.1",
+		"express": "^4.18.1",
+		"http-proxy-middleware": "^2.0.6",
 		"mkdirp": "^1.0.4",
 		"request": "^2.88.2"
 	},

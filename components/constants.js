@@ -11,5 +11,10 @@ module.exports = Object.freeze({
 	spritesPath: join(contentPath, './custom_sprites/'),
 	localRepoPath: join(contentPath, './localRepo/'),
 
+	depricatedPackages: [
+		'concept_femc.shido_draws.edave64',
+		'mc.storm_blaze.edave64',
+	],
+
 	port: 4716,
 });
