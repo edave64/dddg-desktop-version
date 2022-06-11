@@ -5,7 +5,12 @@ const { join } = require('path');
 //const proxy = require('http-proxy-middleware');
 const fs = require('fs');
 const deepmerge = require('deepmerge');
+const { getConfig } = require('./config');
+const IPC = require('./ipc');
+const { queueUninstallContentPack } = require('./packManager');
 const server = express();
+
+const warnedAbout = new Set();
 
 const fsp = fs.promises;
 
@@ -15,6 +20,11 @@ const fsp = fs.promises;
 async function loadRepoFiles() {
 	const folders = await fsp.readdir(constants.localRepoPath);
 	console.log('localrepo folders', folders);
+	const conf = getConfig();
+	const ignore = constants.depricatedPackages.filter(
+		(id) => !conf.skipDeprication.includes(id)
+	);
+	console.log('ignore', ignore);
 
 	return (
 		await Promise.all(
@@ -27,7 +37,22 @@ async function loadRepoFiles() {
 						return null;
 					} catch (e) {}
 					const repoFile = await fsp.readFile(join(packFolder, 'repo.json'));
-					return JSON.parse(repoFile);
+					const json = JSON.parse(repoFile);
+					const id = json.pack.id;
+					if (ignore.includes(id)) {
+						if (warnedAbout.has(id)) return null;
+						IPC.resolvableError(
+							`The installed pack ${id} is depricated. Do you want to delete it?`,
+							['Delete', 'Dismiss']
+						).then((action) => {
+							if (action === 'Delete') {
+								queueUninstallContentPack(id);
+							}
+						});
+						warnedAbout.add(id);
+						return null;
+					}
+					return json;
 				} catch (e) {
 					console.log('No repo', folder, e);
 					return null;
