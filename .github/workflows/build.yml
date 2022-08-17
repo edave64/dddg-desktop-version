@@ -15,7 +15,7 @@ jobs:
       - name: Checkout web repo
         uses: actions/checkout@v3
         with:
-          repository: edave64/ Doki-Doki-Dialog-Generator
+          repository: edave64/Doki-Doki-Dialog-Generator
           ref: gh-pages
           path: gh-pages
 
