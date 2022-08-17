@@ -37,6 +37,7 @@ module.exports.triggerBackgroundWatcher = async function (force) {
 		const group = grouped[groupKey];
 		backgrounds.push({
 			id: group[0],
+			label: group[0],
 			variants: group.map((x) => [
 				`http://localhost:${port}/custom_backgrounds/${x}`,
 			]),
@@ -80,6 +81,7 @@ module.exports.triggerSpriteWatcher = async function (force) {
 		const group = grouped[groupKey];
 		sprites.push({
 			id: group[0],
+			label: group[0],
 			variants: group.map((x) => [
 				`http://localhost:${port}/custom_sprites/${x}`,
 			]),

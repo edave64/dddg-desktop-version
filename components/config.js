@@ -28,7 +28,7 @@ module.exports = {
 			} catch (e) {}
 			if (readConfig.autoLoad) {
 				// Filter out depricated autoloads
-				readConfig.autoLoad.filter((autoload) => {
+				readConfig.autoLoad = readConfig.autoLoad.filter((autoload) => {
 					const throwOut =
 						constants.depricatedPackages.includes(autoload) &&
 						!readConfig.skipDeprication.includes(autoload);

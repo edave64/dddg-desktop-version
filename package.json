@@ -9,7 +9,7 @@
 		"start": "electron .",
 		"pack": "electron-builder --dir",
 		"dist:windows": "electron-builder --windows --x64 --ia32",
-		"dist:linux": "electron-builder --linux --x64 --ia32 --arm64",
+		"dist:linux": "electron-builder --linux --x64 --arm64",
 		"release": "np"
 	},
 	"repository": {

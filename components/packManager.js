@@ -1,7 +1,7 @@
 //const fetch = require('node-fetch');
 const IPC = require('./ipc');
 const { dirname, join, basename } = require('path');
-const { localRepoPath } = require('./constants');
+const { localRepoPath, port } = require('./constants');
 const http = require('https');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
@@ -94,7 +94,7 @@ module.exports = {
 			const incompleteMarker = join(baseTarget, '.incomplete');
 			const indexPath = join(baseTarget, './index.json');
 			const repoPath = join(baseTarget, './repo.json');
-			const localRepoUrl = `http://localhost:${constants.port}/repo/${json.packId}`;
+			const localRepoUrl = `http://localhost:${port}/repo/${json.packId}`;
 
 			try {
 				// If there is a valid pack with an incomplete marker, just remove it and you are done
@@ -190,8 +190,7 @@ function importImage(packBaseUrl, packBasePath, path) {
 	// TODO: Perhaps check if the target exists first, in case
 	if (path.startsWith('@assets/'))
 		return [
-			`http://localhost:${constants.port}/assets/` +
-				path.substr('@assets/'.length),
+			`http://localhost:${port}/assets/` + path.substr('@assets/'.length),
 			Promise.resolve(),
 		];
 
