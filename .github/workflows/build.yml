@@ -31,7 +31,7 @@ jobs:
         run: rm -rf gh-pages
 
       - shell: bash
-        run: echo "//https://npm.pkg.github.com/:_authToken=${{ secrets.REGISTRYTOKEN }}" >> ./.npmrc
+        run: echo "//https://npm.pkg.github.com:_authToken=${{ secrets.REGISTRYTOKEN }}" >> ./.npmrc
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
