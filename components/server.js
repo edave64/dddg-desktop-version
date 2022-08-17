@@ -18,7 +18,12 @@ const fsp = fs.promises;
  * @returns {Promise<{ pack: Object, authors: { [author: string]: Object } }[]>}
  */
 async function loadRepoFiles() {
-	const folders = await fsp.readdir(constants.localRepoPath);
+	let folders = [];
+	try {
+		folders = await fsp.readdir(constants.localRepoPath);
+	} catch (e) {
+		console.log('local repo path does not exist');
+	}
 	console.log('localrepo folders', folders);
 	const conf = getConfig();
 	const ignore = constants.depricatedPackages.filter(
