@@ -64,9 +64,26 @@
 		},
 		"linux": {
 			"target": [
-				"AppImage"
+				{
+					"target": "AppImage",
+					"arch": [
+						"x64",
+						"arm"
+					]
+				}
 			],
 			"category": "Game;Graphics"
+		},
+		"win": {
+			"target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"x64",
+						"ia32"
+					]
+				}
+			]
 		}
 	}
 }

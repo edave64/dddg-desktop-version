@@ -56,9 +56,11 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: dist
+          name: dist ${{ matrix.os }}
           path: |
             dist/*.exe
             dist/*.exe.blockmap
+            dist/*.dmg
+            dist/*.dmg.blockmap
             dist/*.AppImage
             dist/latest*.yml
