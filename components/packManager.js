@@ -130,12 +130,12 @@ module.exports = {
 				if (translationCache[image]) {
 					return `${localRepoUrl}/${translationCache[image]
 						.substring(2)
-						.replace('\\', '/')}`;
+						.replace(/\\/g, '/')}`;
 				}
 
 				const ret = importImage(baseFetch, baseTarget, image);
 				thumbnailImageLoaders.push(ret[1]);
-				return `${localRepoUrl}/${ret[0].substring(2).replace('\\', '/')}`;
+				return `${localRepoUrl}/${ret[0].substring(2).replace(/\\/g, '/')}`;
 			}
 
 			if (repoEntry.preview) {
@@ -199,7 +199,7 @@ function importImage(packBaseUrl, packBasePath, path) {
 
 	const requestUrl = isInBaseUrl ? packBaseUrl + path.substr(1) : path;
 	const retPath = isInBaseUrl
-		? '.' + join('/', path).replace('\\', '/')
+		? '.' + join('/', path).replace(/\\/g, '/')
 		: `./$external/${sha256(path)}_${basename(path)}`;
 	const targetPath = join(packBasePath, retPath);
 
