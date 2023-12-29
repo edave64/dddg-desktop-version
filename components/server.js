@@ -42,6 +42,7 @@ async function loadRepoFiles() {
 						return null;
 					} catch (e) {}
 					const repoFile = await fsp.readFile(join(packFolder, 'repo.json'));
+					const folderUrl = `http://localhost:${constants.port}/repo/${folder}/`;
 					const json = JSON.parse(repoFile);
 					const id = json.pack.id;
 					if (ignore.includes(id)) {
@@ -56,6 +57,16 @@ async function loadRepoFiles() {
 						});
 						warnedAbout.add(id);
 						return null;
+					}
+					if (!json.pack.dddg2Path) {
+						json.pack.dddg2Path = `${folderUrl}index.json`;
+					} else {
+						json.pack.dddg2Path = new URL(json.pack.dddg2Path, folderUrl).href;
+					}
+					if (json.pack.preview) {
+						json.pack.preview = json.pack.preview.map((preview) => {
+							return new URL(preview, folderUrl).href;
+						});
 					}
 					return json;
 				} catch (e) {
@@ -97,7 +108,7 @@ server.use('/custom_backgrounds', express.static(constants.backgroundsPath));
 server.use('/custom_sprites', express.static(constants.spritesPath));
 server.use(express.static(join(__dirname, '../dddgWeb/')));
 /*server.use(
-	proxy.createProxyMiddleware('/', { target: 'http://localhost:3000/' })
+ proxy.createProxyMiddleware('/', { target: 'http://localhost:3000/' })
 );*/
 
 var serverLoaded;
