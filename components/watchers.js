@@ -4,7 +4,6 @@ const config = require('./config');
 const fs = require('fs');
 const fsp = fs.promises;
 const crypto = require('crypto');
-const mkdirp = require('mkdirp');
 
 const IPC = require('./ipc');
 const { backgroundsPath, spritesPath, port } = require('./constants');
@@ -129,7 +128,7 @@ async function hashFolder(folder, rec) {
 	} catch (e) {
 		if (rec) return [[], 0];
 		console.log('Making folder', folder);
-		await mkdirp(folder);
+		await fsp.mkdir(folder, { recursive: true });
 		return hashFolder(folder, true);
 	}
 }

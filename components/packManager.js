@@ -4,7 +4,6 @@ const { dirname, join, basename } = require('path');
 const { localRepoPath, port } = require('./constants');
 const http = require('https');
 const fs = require('fs');
-const mkdirp = require('mkdirp');
 const crypto = require('crypto');
 const sha256 = crypto.createHash('sha256');
 const del = require('del');
@@ -104,7 +103,7 @@ module.exports = {
 				return;
 			} catch (e) {}
 
-			await mkdirp(baseTarget);
+			await fsp.mkdir(baseTarget, { recursive: true });
 			await fsp.writeFile(incompleteMarker, '');
 
 			/** @type {{ [key: string]: string }} */
@@ -209,7 +208,7 @@ function importImage(packBaseUrl, packBasePath, path) {
 			try {
 				const query = http.get(requestUrl);
 
-				await mkdirp(dirname(targetPath));
+				await fsp.mkdir(dirname(targetPath), { recursive: true });
 				const stream = fs.createWriteStream(targetPath, { flags: 'w' });
 
 				stream.on('error', (err) => {

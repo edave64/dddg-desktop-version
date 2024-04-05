@@ -2,7 +2,6 @@ const express = require('express');
 const constants = require('./constants');
 const { port } = require('./constants');
 const { join } = require('path');
-//const proxy = require('http-proxy-middleware');
 const fs = require('fs');
 const deepmerge = require('deepmerge');
 const { getConfig } = require('./config');
