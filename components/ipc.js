@@ -97,7 +97,7 @@ const IPC = {
 				const ret = await callback(...args);
 				send('convo-answer', convoId, ret);
 			} catch (e) {
-				send('convo-error', e);
+				send('convo-error', convoId, e);
 			}
 		});
 	},
