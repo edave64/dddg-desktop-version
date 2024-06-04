@@ -6,6 +6,9 @@ let contentPath = app.getPath('userData');
 module.exports = Object.freeze({
 	basePath: contentPath,
 	configPath: join(contentPath, './config.json'),
+	configBackupPath: join(contentPath, './config.backup.json'),
+	configBrokenPath: join(contentPath, './config.broken.json'),
+	logPath: join(contentPath, './lastRun.log'),
 	characterPath: join(contentPath, './custom_characters/'),
 	backgroundsPath: join(contentPath, './custom_backgrounds/'),
 	spritesPath: join(contentPath, './custom_sprites/'),
