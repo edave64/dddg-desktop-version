@@ -1,6 +1,7 @@
 const { ipcMain } = require('electron');
 const { readdirSync } = require('fs');
 const { join } = require('path');
+const { log } = require('./logger');
 
 /** @type {Electron.WebContents | null} */
 let target;
@@ -8,7 +9,7 @@ let target;
 const IPC = {
 	ready: false,
 	install() {
-		console.log('installing ipc');
+		log('installing ipc');
 		const ipcFolder = join(__dirname, './ipc-handlers/');
 		for (const file of readdirSync(ipcFolder)) {
 			require(join(ipcFolder, file));
@@ -69,7 +70,7 @@ const IPC = {
 	 * @param {import('@edave64/doki-doki-dialog-generator-pack-format/dist/v2/model').ContentPack<string>} pack
 	 */
 	replacePack(pack) {
-		console.log('replace pack', JSON.stringify(pack, undefined, 2));
+		log('replace pack', JSON.stringify(pack, undefined, 2));
 		sendConvo('replace-pack', pack);
 	},
 	/**
@@ -149,7 +150,7 @@ function send(name, ...params) {
 		return;
 	}
 
-	console.log('Sending', name, ...params);
+	log('Sending', name, ...params);
 	return target.send(name, ...params);
 }
 
@@ -159,9 +160,9 @@ function send(name, ...params) {
  * @param {Function} callback
  */
 function receiver(name, callback) {
-	console.log('registering', name);
+	log('registering', name);
 	ipcMain.on(name, async (e, ...args) => {
-		console.log('receiving', name, ...args);
+		log('receiving', name, ...args);
 		target = e.sender;
 		IPC.ready = true;
 		try {

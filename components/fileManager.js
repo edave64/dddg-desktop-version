@@ -1,6 +1,7 @@
 const childProcess = require('child_process');
 const process = require('process');
 const path = require('path');
+const { log } = require('./logger');
 
 module.exports = function openInExplorer(pathToOpen) {
 	let command = null;
@@ -23,6 +24,6 @@ module.exports = function openInExplorer(pathToOpen) {
 			break;
 	}
 	if (!command) return;
-	console.log('Executing command', command, args);
+	log('Executing command', command, args);
 	childProcess.execFile(command, args);
 };

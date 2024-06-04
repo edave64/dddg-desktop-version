@@ -11,6 +11,7 @@ const del = require('del');
 const { walkPackImages } = require('./packHelpers');
 
 const AwaitLock = require('await-lock');
+const { error } = require('./logger');
 
 const fsp = fs.promises;
 
@@ -35,7 +36,7 @@ module.exports = {
 								try {
 									await del(repoDir, { force: true });
 								} catch (e) {
-									console.error(e);
+									error(e);
 								}
 							})()
 						);

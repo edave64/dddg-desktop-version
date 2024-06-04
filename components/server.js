@@ -7,6 +7,7 @@ const deepmerge = require('deepmerge');
 const { getConfig } = require('./config');
 const IPC = require('./ipc');
 const { queueUninstallContentPack } = require('./packManager');
+const { log } = require('./logger');
 const server = express();
 
 const warnedAbout = new Set();
@@ -21,14 +22,14 @@ async function loadRepoFiles() {
 	try {
 		folders = await fsp.readdir(constants.localRepoPath);
 	} catch (e) {
-		console.log('local repo path does not exist');
+		log('local repo path does not exist');
 	}
-	console.log('localrepo folders', folders);
+	log('localrepo folders', folders);
 	const conf = getConfig();
 	const ignore = constants.depricatedPackages.filter(
 		(id) => !conf.skipDeprication.includes(id)
 	);
-	console.log('ignore', ignore);
+	log('ignore', ignore);
 
 	return (
 		await Promise.all(
@@ -37,7 +38,7 @@ async function loadRepoFiles() {
 					const packFolder = join(constants.localRepoPath, folder);
 					try {
 						await fsp.stat(join(packFolder, '.incomplete'));
-						console.log('Skipping', packFolder);
+						log('Skipping', packFolder);
 						return null;
 					} catch (e) {}
 					const repoFile = await fsp.readFile(join(packFolder, 'repo.json'));
@@ -69,7 +70,7 @@ async function loadRepoFiles() {
 					}
 					return json;
 				} catch (e) {
-					console.log('No repo', folder, e);
+					log('No repo', folder, e);
 					return null;
 				}
 			})
@@ -83,7 +84,7 @@ server.use('/repo/repo.json', async (req, res) => {
 		const files = await loadRepoFiles();
 		res.json(files.map((p) => p.pack));
 	} catch (e) {
-		console.log(e);
+		log(e);
 		res.status(500).send();
 	}
 });
@@ -91,7 +92,7 @@ server.use('/repo/people.json', async (req, res) => {
 	try {
 		const files = await loadRepoFiles();
 		let authors = {};
-		console.log(files);
+		log(files);
 
 		for (const file of files) {
 			authors = deepmerge(authors, file.authors);
@@ -99,7 +100,7 @@ server.use('/repo/people.json', async (req, res) => {
 
 		res.json(authors);
 	} catch (e) {
-		console.log(e);
+		log(e);
 		res.status(500).send();
 	}
 });

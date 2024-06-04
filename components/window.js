@@ -8,6 +8,7 @@ const {
 	triggerSpriteWatcher,
 	triggerBackgroundWatcher,
 } = require('./watchers');
+const { error, log } = require('./logger');
 
 const WINDOW_WIDTH = 1280 + 168;
 const WINDOW_HEIGHT = 720;
@@ -23,9 +24,9 @@ app.on('window-all-closed', async function () {
 	try {
 		await deleteIncompleteInstalls();
 	} catch (e) {
-		console.error(e);
+		error(e);
 	}
-	console.log('quitting.');
+	log('quitting.');
 	if (process.platform !== 'darwin') app.quit();
 });
 
@@ -127,7 +128,7 @@ module.exports = {
 		win.webContents.on('will-navigate', (event, url) => {
 			event.preventDefault();
 			if (url === serverUrl) return;
-			console.log(event, url);
+			log(event, url);
 			shell.openExternal(url);
 		});
 

@@ -1,4 +1,5 @@
 const { port } = require('./constants');
+const { log } = require('./logger');
 
 /**
  * @param {import('@edave64/doki-doki-dialog-generator-pack-format/dist/v2/jsonFormat').JSONContentPack | import('@edave64/doki-doki-dialog-generator-pack-format/dist/v1/jsonFormat').JSONCharacter} pack
@@ -37,7 +38,7 @@ async function walkPackImagesV1(pack, baseUrl, callback) {
 	 */
 	function join(base, sub) {
 		const ret = joinNormalize(base, sub, ctx);
-		console.log(base, sub, ret);
+		log(base, sub, ret);
 		return ret;
 	}
 
@@ -88,7 +89,7 @@ async function walkPackImagesV1(pack, baseUrl, callback) {
 			let headFolder = baseFolder;
 
 			if (headGroup.all) {
-				console.log('Head group folder', key, headGroup.folder);
+				log('Head group folder', key, headGroup.folder);
 				headFolder = join(baseFolder, headGroup.folder);
 				headGroup = headGroup.all;
 			}

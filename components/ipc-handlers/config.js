@@ -3,6 +3,7 @@ const config = require('../config');
 const { dialog } = require('electron');
 
 const { getWindow } = require('../window');
+const { log } = require('../logger');
 
 const currentConfig = config.getConfig();
 
@@ -19,7 +20,7 @@ IPC.onConversation(
 );
 
 IPC.onConversation('config.get', async (key) => {
-	console.log('requesting', key);
+	log('requesting', key);
 	return currentConfig[key];
 });
 

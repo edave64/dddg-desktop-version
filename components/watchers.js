@@ -7,6 +7,7 @@ const crypto = require('crypto');
 
 const IPC = require('./ipc');
 const { backgroundsPath, spritesPath, port } = require('./constants');
+const { log } = require('./logger');
 
 let lastBackgroundWatcherHash = null;
 let lastSpriteWatcherHash = null;
@@ -127,7 +128,7 @@ async function hashFolder(folder, rec) {
 		return [ret, sha.update(JSON.stringify(ret)).digest('hex')];
 	} catch (e) {
 		if (rec) return [[], 0];
-		console.log('Making folder', folder);
+		log('Making folder', folder);
 		await fsp.mkdir(folder, { recursive: true });
 		return hashFolder(folder, true);
 	}
