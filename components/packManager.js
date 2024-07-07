@@ -94,7 +94,7 @@ module.exports = {
 			const incompleteMarker = join(baseTarget, '.incomplete');
 			const indexPath = join(baseTarget, './index.json');
 			const repoPath = join(baseTarget, './repo.json');
-			const localRepoUrl = `http://localhost:${port}/repo/${json.packId}`;
+			const localRepoUrl = `.`;
 
 			try {
 				// If there is a valid pack with an incomplete marker, just remove it and you are done
