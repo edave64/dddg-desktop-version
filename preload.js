@@ -31,6 +31,16 @@ const channelWhitelist = [
 	'resolvable-error',
 	'save-file',
 	'reload',
+	'save-states.get-all',
+	'save-states.begin',
+	'save-states.file',
+	'save-states.end',
+	'save-states.load',
+	'save-states.download-zip',
+	'save-states.upload-zip',
+	'save-states.delete',
+	'save-states.load-default',
+	'save-states.default-begin',
 ];
 
 let currentConvoId = 0;

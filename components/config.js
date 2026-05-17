@@ -12,6 +12,8 @@ const { warn, error, log } = require('./logger');
 
 const baseConfig = {
 	downloadPath: path.join(basePath, './panels/'),
+	savesPath: path.join(basePath, './saves/'),
+	defaultSavePath: path.join(basePath, './default-save/'),
 	autoUpdateCheck: true,
 	autoLoad: [],
 	skipDeprication: [],
@@ -28,7 +30,7 @@ let preserveConfigBackup = false;
 
 module.exports = {
 	/**
-	 * @returns {{ downloadPath: string, autoUpdateCheck: boolean, autoLoad: string[], skipDeprication: string[] }}
+	 * @returns {{ downloadPath: string, autoUpdateCheck: boolean, autoLoad: string[], skipDeprication: string[], defaultSavePath: string, savesPath: string }}
 	 */
 	getConfig() {
 		if (!readConfig) {

@@ -23,19 +23,20 @@
 	},
 	"homepage": "https://github.com/edave64/dddg-desktop-version#readme",
 	"devDependencies": {
-		"electron": "^29.2.0",
-		"electron-builder": "^24.13.3",
-		"np": "^3.0.4",
-		"prettier": "^3.2.5"
+		"electron": "^42.0.1",
+		"electron-builder": "^26.8.1",
+		"np": "^11.2.0",
+		"prettier": "^3.8.3"
 	},
 	"dependencies": {
 		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0",
 		"await-lock": "^2.2.2",
-		"chokidar": "^3.5.3",
-		"deepmerge": "^4.2.2",
-		"del": "^6.1.1",
-		"electron-updater": "^6.1.8",
-		"express": "^4.19.2"
+		"chokidar": "^5.0.0",
+		"deepmerge": "^4.3.1",
+		"del": "^8.0.1",
+		"electron-updater": "^6.8.3",
+		"express": "^5.2.1",
+		"jszip": "^3.10.1"
 	},
 	"build": {
 		"appId": "org.xcvbnm.dddg",
