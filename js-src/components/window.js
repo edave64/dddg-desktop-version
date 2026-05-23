@@ -64,10 +64,10 @@ module.exports = {
 			resizable: true,
 			icon:
 				process.platform === 'win32'
-					? path.join(__dirname, '../favicon.ico')
-					: path.join(__dirname, '../favicon.png'),
+					? path.join(__dirname, '../../favicon.ico')
+					: path.join(__dirname, '../../favicon.png'),
 			webPreferences: {
-				preload: path.join(app.getAppPath(), 'preload.js'),
+				preload: path.join(app.getAppPath(), 'js-src/preload.js'),
 				contextIsolation: true,
 				enableWebSQL: false,
 				enableRemoteModule: false,

@@ -106,7 +106,7 @@ server.use('/repo/people.json', async (req, res) => {
 });
 server.use('/custom_backgrounds', express.static(constants.backgroundsPath));
 server.use('/custom_sprites', express.static(constants.spritesPath));
-server.use(express.static(join(__dirname, '../dddgWeb/')));
+server.use(express.static(join(__dirname, '../../dddgWeb/')));
 /*server.use(
  proxy.createProxyMiddleware('/', { target: 'http://localhost:3000/' })
 );*/

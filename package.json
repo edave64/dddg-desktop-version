@@ -2,7 +2,7 @@
 	"name": "dddg-desktop-version",
 	"version": "2.5.2",
 	"description": "The desktop version of DDDG",
-	"main": "main.js",
+	"main": "js-src/main.js",
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
 		"test": "npm run lint",
