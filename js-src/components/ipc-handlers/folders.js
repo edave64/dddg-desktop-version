@@ -1,7 +1,7 @@
-const IPC = require('../ipc');
-const openInExplorer = require('../fileManager');
-const constants = require('../constants');
-const config = require('../config');
+import IPC from '../ipc.js';
+import { openInExplorer } from '../fileManager.js';
+import * as constants from '../constants.js';
+import * as config from '../config.js';
 
 /**
  * @param {'downloads'|'backgrounds'|'sprites'}

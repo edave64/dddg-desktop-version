@@ -1,12 +1,12 @@
-const { getConfig } = require('../config');
-const IPC = require('../ipc');
-const packManager = require('../packManager');
-const fs = require('fs');
-const fsp = fs.promises;
-const JSZip = require('jszip');
-const path = require('path');
-const { dialog } = require('electron');
-const { getWindow } = require('../window');
+import { getConfig } from '../config.js';
+import IPC from '../ipc.js';
+import * as packManager from '../packManager.js';
+import fs from 'fs';
+import fsp from 'fs/promises';
+import JSZip from 'jszip';
+import path from 'path';
+import { dialog } from 'electron';
+import { getWindow } from '../window.js';
 
 // save-file collides with the save-file ipc handler! Make this a
 // "saveStates." namespace

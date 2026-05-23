@@ -1,14 +1,13 @@
-const express = require('express');
-const constants = require('./constants');
-const { port } = require('./constants');
-const { join } = require('path');
-const fs = require('fs');
-const deepmerge = require('deepmerge');
-const { getConfig } = require('./config');
-const IPC = require('./ipc');
-const { queueUninstallContentPack } = require('./packManager');
-const { log } = require('./logger');
-const server = express();
+import express from 'express';
+import * as constants from './constants.js';
+import { port } from './constants.js';
+import { join } from 'path';
+import fs from 'fs';
+import deepmerge from 'deepmerge';
+import { getConfig } from './config.js';
+import IPC from './ipc.js';
+import { queueUninstallContentPack } from './packManager.js';
+import { log } from './logger.js';
 
 const warnedAbout = new Set();
 
@@ -78,6 +77,8 @@ async function loadRepoFiles() {
 	).filter((x) => x);
 }
 
+const server = express();
+
 server.use('/repo', express.static(constants.localRepoPath));
 server.use('/repo/repo.json', async (req, res) => {
 	try {
@@ -106,17 +107,16 @@ server.use('/repo/people.json', async (req, res) => {
 });
 server.use('/custom_backgrounds', express.static(constants.backgroundsPath));
 server.use('/custom_sprites', express.static(constants.spritesPath));
-server.use(express.static(join(__dirname, '../../dddgWeb/')));
+server.use(express.static(join(import.meta.dirname, '../../dddgWeb/')));
 /*server.use(
  proxy.createProxyMiddleware('/', { target: 'http://localhost:3000/' })
 );*/
 
 var serverLoaded;
 
-module.exports = {
+export default {
 	start() {
 		server.listen(port, () => {
-			server_ready = true;
 			serverLoaded();
 		});
 	},

@@ -1,7 +1,7 @@
-const { ipcMain } = require('electron');
-const { readdirSync } = require('fs');
-const { join } = require('path');
-const { log } = require('./logger');
+import { ipcMain } from 'electron';
+import { readdirSync } from 'fs';
+import { join } from 'path';
+import { log } from './logger.js';
 
 /** @type {Electron.WebContents | null} */
 let target;
@@ -10,9 +10,9 @@ const IPC = {
 	ready: false,
 	install() {
 		log('installing ipc');
-		const ipcFolder = join(__dirname, './ipc-handlers/');
+		const ipcFolder = join(import.meta.dirname, './ipc-handlers/');
 		for (const file of readdirSync(ipcFolder)) {
-			require(join(ipcFolder, file));
+			import(join(ipcFolder, file));
 		}
 	},
 	/**
@@ -185,4 +185,4 @@ receiver('convo-error', function (id, err) {
 	waitingConvos.get(id).reject(err);
 });
 
-module.exports = IPC;
+export default IPC;

@@ -1,11 +1,12 @@
-const path = require('path');
-const fs = require('fs');
-const { logPath } = require('./constants');
+import path from 'path';
+import fs from 'fs';
+import { logPath } from './constants.js';
+import os from 'os';
 
 let initialized = false;
 let logFileStream = null;
 
-const censored = [require('os').userInfo().username];
+const censored = [os.userInfo().username];
 
 function init() {
 	initialized = true;
@@ -19,23 +20,23 @@ function init() {
 	}
 }
 
-const Logger = {
-	log(...args) {
-		console.log(...args);
-		if (!initialized) init();
-		writeLog(args.map(normalize).join(' '));
-	},
-	error(...args) {
-		console.error(...args);
-		if (!initialized) init();
-		writeLog(`ERROR: ${args.map(normalize).join(' ')}`);
-	},
-	warn(...args) {
-		console.warn(...args);
-		if (!initialized) init();
-		writeLog(`WARN: ${args.map(normalize).join(' ')}`);
-	},
-};
+export function log(...args) {
+	console.log(...args);
+	if (!initialized) init();
+	writeLog(args.map(normalize).join(' '));
+}
+
+export function error(...args) {
+	console.error(...args);
+	if (!initialized) init();
+	writeLog(`ERROR: ${args.map(normalize).join(' ')}`);
+}
+
+export function warn(...args) {
+	console.warn(...args);
+	if (!initialized) init();
+	writeLog(`WARN: ${args.map(normalize).join(' ')}`);
+}
 
 function normalize(arg) {
 	if (typeof arg === 'object') {
@@ -59,5 +60,3 @@ function writeLog(str) {
 	if (!logFileStream) return;
 	logFileStream.write(`${new Date().toISOString()} - ${censor(str)}\n`);
 }
-
-module.exports = Logger;

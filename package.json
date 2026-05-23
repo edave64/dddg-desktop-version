@@ -3,6 +3,7 @@
 	"version": "2.5.2",
 	"description": "The desktop version of DDDG",
 	"main": "js-src/main.js",
+	"type": "module",
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
 		"test": "npm run lint",

@@ -1,6 +1,10 @@
-const { autoUpdater } = require('electron-updater');
-const currentConfig = require('./config').getConfig();
-const IPC = require('./ipc');
+import electronUpdater from 'electron-updater';
+import * as config from './config.js';
+import IPC from './ipc.js';
+
+const currentConfig = config.getConfig();
+
+const autoUpdater = electronUpdater.autoUpdater;
 
 autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.signals.progress((info) => {
@@ -21,7 +25,7 @@ if (currentConfig.autoUpdateCheck) {
 /** @type {string|null}*/
 let newVersion = null;
 
-const updater = (module.exports = {
+const updater = {
 	async checkForUpdate() {
 		try {
 			const update = await autoUpdater.checkForUpdate();
@@ -30,4 +34,6 @@ const updater = (module.exports = {
 			IPC.update.checkStopped();
 		}
 	},
-});
+};
+
+export default updater;

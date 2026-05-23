@@ -1,9 +1,9 @@
-const IPC = require('../ipc');
-const config = require('../config');
-const { dialog } = require('electron');
+import IPC from '../ipc.js';
+import * as config from '../config.js';
+import { dialog } from 'electron';
 
-const { getWindow } = require('../window');
-const { log } = require('../logger');
+import { getWindow } from '../window.js';
+import { log } from '../logger.js';
 
 const currentConfig = config.getConfig();
 

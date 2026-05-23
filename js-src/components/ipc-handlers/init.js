@@ -1,10 +1,7 @@
-const IPC = require('../ipc');
-const packManager = require('../packManager');
-const config = require('../config');
-const {
-	triggerBackgroundWatcher,
-	triggerSpriteWatcher,
-} = require('../watchers');
+import IPC from '../ipc.js';
+import * as packManager from '../packManager.js';
+import * as config from '../config.js';
+import { triggerBackgroundWatcher, triggerSpriteWatcher } from '../watchers.js';
 
 const currentConfig = config.getConfig();
 

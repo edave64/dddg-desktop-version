@@ -1,21 +1,17 @@
-const { port } = require('./constants');
-const { log } = require('./logger');
+import { port } from './constants.js';
+import { log } from './logger.js';
 
 /**
  * @param {import('@edave64/doki-doki-dialog-generator-pack-format/dist/v2/jsonFormat').JSONContentPack | import('@edave64/doki-doki-dialog-generator-pack-format/dist/v1/jsonFormat').JSONCharacter} pack
  * @param {(path: string) => string} callback
  */
-module.exports.walkPackImages = async function walkPackImages(
-	pack,
-	baseUrl,
-	callback
-) {
+export async function walkPackImages(pack, baseUrl, callback) {
 	if (pack.version === '2.0') {
 		await walkPackImagesV2(pack, baseUrl, callback);
 	} else {
 		await walkPackImagesV1(pack, baseUrl, callback);
 	}
-};
+}
 
 /**
  *

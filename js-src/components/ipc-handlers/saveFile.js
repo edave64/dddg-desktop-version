@@ -1,7 +1,7 @@
-const IPC = require('../ipc');
-const config = require('../config').getConfig();
-const { join } = require('path');
-const fs = require('fs');
+import IPC from '../ipc.js';
+import * as config from '../config.js';
+import { join } from 'path';
+import fs from 'fs';
 
 IPC.onConversation('save-file', async (filename, blob) => {
 	await fs.promises.mkdir(config.downloadPath, { recursive: true });

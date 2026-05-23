@@ -1,20 +1,20 @@
-const { join, relative } = require('path');
+import { join, relative } from 'path';
 
-const config = require('./config');
-const fs = require('fs');
-const fsp = fs.promises;
-const crypto = require('crypto');
+import * as config from './config.js';
+import fs from 'fs';
+import fsp from 'fs/promises';
+import crypto from 'crypto';
 
-const IPC = require('./ipc');
-const { backgroundsPath, spritesPath, port } = require('./constants');
-const { log } = require('./logger');
+import IPC from './ipc.js';
+import { backgroundsPath, spritesPath, port } from './constants.js';
+import { log } from './logger.js';
 
 let lastBackgroundWatcherHash = null;
 let lastSpriteWatcherHash = null;
 
 const currentConfig = config.getConfig();
 
-module.exports.triggerBackgroundWatcher = async function (force) {
+export async function triggerBackgroundWatcher(force) {
 	const folder = backgroundsPath;
 	const [listing, folderHash] = await hashFolder(folder);
 	if (folderHash === lastBackgroundWatcherHash && !force) return;
@@ -56,9 +56,9 @@ module.exports.triggerBackgroundWatcher = async function (force) {
 		poemStyles: [],
 		sprites: [],
 	});
-};
+}
 
-module.exports.triggerSpriteWatcher = async function (force) {
+export async function triggerSpriteWatcher(force) {
 	const folder = spritesPath;
 	const [listing, folderHash] = await hashFolder(folder);
 	if (folderHash === lastSpriteWatcherHash && !force) return;
@@ -100,7 +100,7 @@ module.exports.triggerSpriteWatcher = async function (force) {
 		poemStyles: [],
 		sprites,
 	});
-};
+}
 
 /**
  * @param {*} folder

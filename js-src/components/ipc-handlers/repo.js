@@ -1,5 +1,5 @@
-const IPC = require('../ipc');
-const packManager = require('../packManager');
+import IPC from '../ipc.js';
+import * as packManager from '../packManager.js';
 
 IPC.onConversation(
 	'repo.install',

@@ -1,5 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+import { app, BrowserWindow } from 'electron';
+import server from './components/server.js';
+import ipc from './components/ipc.js';
+import window from './components/window.js';
 
 app.enableSandbox();
 
@@ -15,14 +18,10 @@ app.whenReady().then(() => {
 });
 
 async function main() {
-	const server = require('./components/server.js');
-	const ipc = require('./components/ipc.js');
-	const window = require('./components/window.js');
-
-	ipc.install();
+	await ipc.install();
 	server.start();
 
-	const updater = require('./components/updater.js');
+	const updater = await import('./components/updater.js');
 
 	await Promise.all([server.isReady, window.isReady]);
 	window.open();

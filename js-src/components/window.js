@@ -1,14 +1,11 @@
-const { app, Menu, BrowserWindow, shell, nativeTheme } = require('electron');
-const path = require('path');
-const url = require('url');
-const { port } = require('./constants');
-const IPC = require('./ipc');
-const { deleteIncompleteInstalls } = require('./packManager');
-const {
-	triggerSpriteWatcher,
-	triggerBackgroundWatcher,
-} = require('./watchers');
-const { error, log } = require('./logger');
+import { app, Menu, BrowserWindow, shell, nativeTheme } from 'electron';
+import path from 'path';
+import url from 'url';
+import { port } from './constants.js';
+import IPC from './ipc.js';
+import { deleteIncompleteInstalls } from './packManager.js';
+import { triggerSpriteWatcher, triggerBackgroundWatcher } from './watchers.js';
+import { error, log } from './logger.js';
 
 const WINDOW_WIDTH = 1280 + 168;
 const WINDOW_HEIGHT = 720;
@@ -56,7 +53,7 @@ function create_menus() {
 /** @type {BrowserWindow} */
 let win;
 
-module.exports = {
+export default {
 	open() {
 		win = new BrowserWindow({
 			width: WINDOW_WIDTH,
@@ -64,8 +61,8 @@ module.exports = {
 			resizable: true,
 			icon:
 				process.platform === 'win32'
-					? path.join(__dirname, '../../favicon.ico')
-					: path.join(__dirname, '../../favicon.png'),
+					? path.join(import.meta.dirname, '../../favicon.ico')
+					: path.join(import.meta.dirname, '../../favicon.png'),
 			webPreferences: {
 				preload: path.join(app.getAppPath(), 'js-src/preload.js'),
 				contextIsolation: true,
@@ -169,3 +166,7 @@ module.exports = {
 		return win;
 	},
 };
+
+export function getWindow() {
+	return win;
+}

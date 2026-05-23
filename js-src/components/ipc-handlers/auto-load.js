@@ -1,5 +1,5 @@
-const IPC = require('../ipc');
-const config = require('../config');
+import IPC from '../ipc.js';
+import * as config from '../config.js';
 
 const currentConfig = config.getConfig();
 
