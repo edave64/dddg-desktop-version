@@ -42,4 +42,6 @@
 		"skipLibCheck": true,
 		"erasableSyntaxOnly": true,
 	},
+	"include": ["ts-src/**/*.ts"],
+  	"exclude": ["ts-src/preload.ts"]
 }

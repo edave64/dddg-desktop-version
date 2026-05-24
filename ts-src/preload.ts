@@ -1,10 +1,7 @@
 // This file is loaded whenever a javascript context is created. It runs in a
 // private scope that can access a subset of Electron renderer APIs. We must be
 // careful to not leak any objects into the global scope!
-// esmodules aren't available in the preload script, so we have to use require here
-const { ipcRenderer, contextBridge } = (require as any)(
-	'electron'
-) as typeof import('electron');
+import { ipcRenderer, contextBridge } from 'electron';
 
 // To prevent any kind of exploit of the preload script from poisoning the main process,
 // we have to disable require completely once we don't need it anymore

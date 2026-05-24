@@ -7,11 +7,13 @@
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
 		"test": "npm run lint && tsgo --no-emit",
-		"start": "tsgo && electron .",
-		"pack": "tsgo && electron-builder --dir",
-		"dist:windows": "tsgo && electron-builder --windows --x64 --ia32",
-		"dist:linux": "tsgo && electron-builder --linux --x64 --arm64",
-		"release": "tsgo && np"
+		"build:preload": "tsgo -p tsconfig.preload.json",
+		"build": "tsgo && npm run build:preload",
+		"start": "npm run build && electron .",
+		"pack": "npm run build && electron-builder --dir",
+		"dist:windows": "npm run build && electron-builder --windows --x64 --ia32",
+		"dist:linux": "npm run build && electron-builder --linux --x64 --arm64",
+		"release": "npm run build && np"
 	},
 	"repository": {
 		"type": "git",
