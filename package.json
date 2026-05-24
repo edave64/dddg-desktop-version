@@ -24,6 +24,7 @@
 	},
 	"homepage": "https://github.com/edave64/dddg-desktop-version#readme",
 	"devDependencies": {
+		"@typescript/native-preview": "^7.0.0-dev.20260421.2",
 		"electron": "^42.0.1",
 		"electron-builder": "^26.8.1",
 		"np": "^11.2.0",
