@@ -12,7 +12,7 @@ const IPC = {
 		log('installing ipc');
 		const ipcFolder = join(import.meta.dirname, './ipc-handlers/');
 		for (const file of readdirSync(ipcFolder)) {
-			import(join(ipcFolder, file));
+			import('file://' + join(ipcFolder, file));
 		}
 	},
 	/**
