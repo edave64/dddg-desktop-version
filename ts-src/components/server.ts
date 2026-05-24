@@ -13,14 +13,13 @@ const warnedAbout = new Set();
 
 const fsp = fs.promises;
 
-/**
- * @returns {Promise<{ pack: Object, authors: { [author: string]: Object } }[]>}
- */
-async function loadRepoFiles() {
-	let folders = [];
+async function loadRepoFiles(): Promise<
+	{ pack: Object; authors: { [author: string]: Object } }[]
+> {
+	let folders: string[] = [];
 	try {
 		folders = await fsp.readdir(constants.localRepoPath);
-	} catch (e) {
+	} catch {
 		log('local repo path does not exist');
 	}
 	log('localrepo folders', folders);
@@ -40,7 +39,10 @@ async function loadRepoFiles() {
 						log('Skipping', packFolder);
 						return null;
 					} catch (e) {}
-					const repoFile = await fsp.readFile(join(packFolder, 'repo.json'));
+					const repoFile = await fsp.readFile(
+						join(packFolder, 'repo.json'),
+						'utf8'
+					);
 					const folderUrl = `http://localhost:${constants.port}/repo/${folder}/`;
 					const json = JSON.parse(repoFile);
 					const id = json.pack.id;
@@ -63,7 +65,7 @@ async function loadRepoFiles() {
 						json.pack.dddg2Path = new URL(json.pack.dddg2Path, folderUrl).href;
 					}
 					if (json.pack.preview) {
-						json.pack.preview = json.pack.preview.map((preview) => {
+						json.pack.preview = json.pack.preview.map((preview: string) => {
 							return new URL(preview, folderUrl).href;
 						});
 					}
@@ -112,15 +114,17 @@ server.use(express.static(join(import.meta.dirname, '../../dddgWeb/')));
  proxy.createProxyMiddleware('/', { target: 'http://localhost:3000/' })
 );*/
 
-var serverLoaded;
+var { promise, resolve, reject } = Promise.withResolvers<void>();
 
 export default {
 	start() {
-		server.listen(port, () => {
-			serverLoaded();
+		server.listen(port, (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
 		});
 	},
-	isReady: new Promise((resolve, reject) => {
-		serverLoaded = resolve;
-	}),
+	isReady: promise,
 };

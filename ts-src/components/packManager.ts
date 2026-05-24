@@ -4,14 +4,13 @@ import { localRepoPath, port } from './constants.js';
 import http from 'https';
 import fs from 'fs';
 import crypto from 'crypto';
-import * as del from 'del';
+import { deleteAsync } from 'del';
 
 import { walkPackImages } from './packHelpers.js';
 
 import AwaitLock from 'await-lock';
 import { error } from './logger.js';
 
-const sha256 = crypto.createHash('sha256');
 const fsp = fs.promises;
 
 const contentPackLock = new AwaitLock.default();
@@ -19,7 +18,7 @@ const contentPackLock = new AwaitLock.default();
 export async function deleteIncompleteInstalls() {
 	await contentPackLock.acquireAsync();
 	try {
-		const uninstalls = [];
+		const uninstalls: Promise<void>[] = [];
 		const dirs = await fsp.readdir(localRepoPath);
 		await Promise.all(
 			dirs.map(async (dir) => {
@@ -32,7 +31,7 @@ export async function deleteIncompleteInstalls() {
 					uninstalls.push(
 						(async () => {
 							try {
-								await del(repoDir, { force: true });
+								await deleteAsync(repoDir, { force: true });
 							} catch (e) {
 								error(e);
 							}
@@ -47,14 +46,14 @@ export async function deleteIncompleteInstalls() {
 	}
 }
 
-/**
- * @param {string} url
- */
-export async function installContentPack(url, repoEntry, authors) {
+export async function installContentPack(
+	url: string,
+	repoEntry: any,
+	authors: any
+) {
 	await contentPackLock.acquireAsync();
 	try {
-		/** @type {string} */
-		let response;
+		let response: string;
 		try {
 			if (url.startsWith('/')) {
 				url = 'http://localhost:3000' + url;
@@ -78,13 +77,13 @@ export async function installContentPack(url, repoEntry, authors) {
 				});
 				request.on('error', (err) => reject(err));
 			});
-		} catch (e) {
+		} catch (e: any) {
 			throw new Error('Could not fetch content pack: ' + e.message);
 		}
 		let json;
 		try {
 			json = JSON.parse(response);
-		} catch (e) {
+		} catch (e: any) {
 			throw new Error('Cannot parse json: ' + e.message);
 		}
 		const baseFetch = dirname(url);
@@ -105,10 +104,9 @@ export async function installContentPack(url, repoEntry, authors) {
 		await fsp.mkdir(baseTarget, { recursive: true });
 		await fsp.writeFile(incompleteMarker, '');
 
-		/** @type {{ [key: string]: string }} */
-		const translationCache = {};
+		const translationCache: Record<string, string> = {};
 
-		const walker = (path) => {
+		const walker = (path: string) => {
 			const ret = importImage(baseFetch, baseTarget, path);
 			translationCache[path] = ret[0];
 			return ret;
@@ -119,16 +117,17 @@ export async function installContentPack(url, repoEntry, authors) {
 		delete repoEntry.dddg1Path;
 		delete repoEntry.ddcc2Path;
 		repoEntry.dddg2Path = `${localRepoUrl}/index.json`;
-		const thumbnailImageLoaders = [];
+		const thumbnailImageLoaders: Promise<void>[] = [];
 
-		function translateImage(image, folder) {
+		function translateImage(image: string) {
 			if (image.startsWith(baseFetch)) {
 				image = './' + image.substr(baseFetch.length);
 			}
 			if (translationCache[image]) {
-				return `${localRepoUrl}/${translationCache[image]
-					.substring(2)
-					.replace(/\\/g, '/')}`;
+				return `${localRepoUrl}/${translationCache[image]!.substring(2).replace(
+					/\\/g,
+					'/'
+				)}`;
 			}
 
 			const ret = importImage(baseFetch, baseTarget, image);
@@ -168,21 +167,18 @@ export async function installContentPack(url, repoEntry, authors) {
 	}
 }
 
-/**
- * @param {string} packId
- */
-export async function queueUninstallContentPack(packId) {
+export async function queueUninstallContentPack(packId: string): Promise<void> {
 	const baseTarget = join(localRepoPath, join('/', packId));
 	const incompleteMarker = join(baseTarget, '.incomplete');
 	await fsp.writeFile(incompleteMarker, '');
 	IPC.reloadLocalRepo();
 }
 
-/**
- * @param {string} path
- * @returns {[string, Promise<void>]}
- */
-function importImage(packBaseUrl, packBasePath, path) {
+function importImage(
+	packBaseUrl: string,
+	packBasePath: string,
+	path: string
+): [string, Promise<void>] {
 	// Images in the assets folder are simply redirected
 	// TODO: Perhaps check if the target exists first, in case
 	if (path.startsWith('@assets/'))
@@ -195,9 +191,10 @@ function importImage(packBaseUrl, packBasePath, path) {
 	const isInBaseUrl = path.startsWith('./');
 
 	const requestUrl = isInBaseUrl ? packBaseUrl + path.substr(1) : path;
+	const sha256 = crypto.createHash('sha256');
 	const retPath = isInBaseUrl
 		? '.' + join('/', path).replace(/\\/g, '/')
-		: `./$external/${sha256(path)}_${basename(path)}`;
+		: `./$external/${sha256.update(path).digest('hex')}_${basename(path)}`;
 	const targetPath = join(packBasePath, retPath);
 
 	return [
@@ -233,11 +230,9 @@ function importImage(packBaseUrl, packBasePath, path) {
 	];
 }
 
-/**
- * @typedef PathData
- * @type {Object}
- * @property {string} baseFetch
- * @property {string} baseTarget
- * @property {string} externalTarget
- * @property {Object.<string, string>} paths
- */
+type PathData = {
+	baseFetch: string;
+	baseTarget: string;
+	externalTarget: string;
+	paths: Record<string, string>;
+};

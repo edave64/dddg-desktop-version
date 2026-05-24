@@ -3,13 +3,13 @@ import * as config from '../config.js';
 
 const currentConfig = config.getConfig();
 
-IPC.onConversation('auto-load.add', async (id) => {
+IPC.onConversation('auto-load.add', async (id: string) => {
 	currentConfig.autoLoad = [...(currentConfig.autoLoad || []), id];
 	IPC.autoloadChanged(currentConfig.autoLoad);
 	config.saveConfig();
 });
 
-IPC.onConversation('auto-load.remove', async (id) => {
+IPC.onConversation('auto-load.remove', async (id: string) => {
 	currentConfig.autoLoad = (currentConfig.autoLoad || []).filter(
 		(x) => x !== id
 	);

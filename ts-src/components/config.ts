@@ -15,11 +15,11 @@ const baseConfig = {
 	savesPath: path.join(basePath, './saves/'),
 	defaultSavePath: path.join(basePath, './default-save/'),
 	autoUpdateCheck: true,
-	autoLoad: [],
-	skipDeprication: [],
+	autoLoad: [] as string[],
+	skipDeprication: [] as string[],
 };
 
-let readConfig = null;
+let readConfig: null | typeof baseConfig = null;
 
 /**
  * Set when the primary config file could not be loaded, and the backup was used.
@@ -37,14 +37,14 @@ export function getConfig() {
 		let configSuccess = false;
 		for (let retry = 0; retry < 5; ++retry) {
 			try {
-				const content = fs.readFileSync(configPath);
+				const content = fs.readFileSync(configPath, 'utf8');
 				readConfig = {
 					...readConfig,
 					...JSON.parse(content),
 				};
 				configSuccess = true;
 				break;
-			} catch (e) {
+			} catch (e: any) {
 				if (e.code === 'ENOENT') {
 					// File doesn't exist. This is a valid state, nothing to warn about
 					break;
@@ -55,7 +55,7 @@ export function getConfig() {
 		if (!configSuccess) {
 			warn('Failed to load config. Try to restore from backup.');
 			try {
-				const content = fs.readFileSync(configBackupPath);
+				const content = fs.readFileSync(configBackupPath, 'utf8');
 				readConfig = {
 					...readConfig,
 					...JSON.parse(content),
@@ -78,12 +78,12 @@ export function getConfig() {
 				error('Failed to load config backup. Using default config.');
 			}
 		}
-		if (readConfig.autoLoad) {
+		if (readConfig && readConfig.autoLoad) {
 			// Filter out depricated autoloads
 			readConfig.autoLoad = readConfig.autoLoad.filter((autoload) => {
 				const throwOut =
 					constants.depricatedPackages.includes(autoload) &&
-					!readConfig.skipDeprication.includes(autoload);
+					!readConfig!.skipDeprication.includes(autoload);
 				if (throwOut) {
 					log(
 						`Package ${autoload} is depricated and removed from auto loading list.`
@@ -93,7 +93,7 @@ export function getConfig() {
 			});
 		}
 	}
-	return readConfig;
+	return readConfig!;
 }
 
 export function saveConfig() {

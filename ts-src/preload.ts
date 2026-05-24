@@ -2,10 +2,13 @@
 // private scope that can access a subset of Electron renderer APIs. We must be
 // careful to not leak any objects into the global scope!
 // esmodules aren't available in the preload script, so we have to use require here
-const { ipcRenderer, contextBridge } = require('electron');
+const { ipcRenderer, contextBridge } = (require as any)(
+	'electron'
+) as typeof import('electron');
 
 // To prevent any kind of exploit of the preload script from poisoning the main process,
 // we have to disable require completely once we don't need it anymore
+//@ts-expect-error
 require = null;
 
 const channelWhitelist = [
@@ -54,16 +57,12 @@ const waitingConvos = new Map();
 
 contextBridge.exposeInMainWorld('isElectron', {});
 contextBridge.exposeInMainWorld('ipcRenderer', {
-	send(channel, ...args) {
+	send(channel: string, ...args: any[]): void {
 		assertChannelWhitelisted(channel);
 		console.log('Sending', channel, ...args);
 		ipcRenderer.send(channel, ...args);
 	},
-	/**
-	 * @param {string} name
-	 * @param {any[]} params
-	 */
-	sendConvo(channel, ...params) {
+	sendConvo(channel: string, ...params: any[]): Promise<any> {
 		assertChannelWhitelisted(channel);
 
 		const id = 'sub-' + currentConvoId;
@@ -80,18 +79,14 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 			ipcRenderer.send(channel, id, ...params);
 		});
 	},
-	on(channel, listener) {
+	on(channel: string, listener: Function): void {
 		assertChannelWhitelisted(channel);
 		ipcRenderer.on(channel, (event, ...args) => {
 			console.log('Receiving', channel, ...args);
 			listener(...args);
 		});
 	},
-	/**
-	 * @param {string} name
-	 * @param {Function} callback
-	 */
-	onConversation(channel, callback) {
+	onConversation(channel: string, callback: Function): void {
 		assertChannelWhitelisted(channel);
 		ipcRenderer.on(channel, async function (event, convoId, ...args) {
 			try {
@@ -107,10 +102,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 	},
 });
 
-/**
- * @param {string} channel
- */
-function assertChannelWhitelisted(channel) {
+function assertChannelWhitelisted(channel: string): void {
 	if (!channelWhitelist.includes(channel)) {
 		throw new Error(
 			`Security Exception: IPC channel '${channel}' is not on the whitelist!`

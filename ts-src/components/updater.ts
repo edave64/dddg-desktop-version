@@ -11,7 +11,7 @@ autoUpdater.signals.progress((info) => {
 	IPC.update.progress(info.percent);
 });
 
-autoUpdater.signals.updateDownloaded((info) => {
+autoUpdater.signals.updateDownloaded(() => {
 	IPC.update.progress('done');
 });
 
@@ -19,20 +19,19 @@ if (currentConfig.autoUpdateCheck) {
 	autoUpdater.autoDownload = true;
 	autoUpdater.checkForUpdatesAndNotify({
 		title: 'Doki Doki Dialog Generator - Update',
+		body: 'A new update is available. It will be installed automatically.',
 	});
 } else {
 	autoUpdater.autoDownload = false;
 }
 
-/** @type {string|null}*/
-let newVersion = null;
-
 const updater = {
 	async checkForUpdate() {
 		try {
-			const update = await autoUpdater.checkForUpdate();
-			IPC.update.sendAvailable(update.updateInfo.version);
-		} catch (e) {
+			const update = await autoUpdater.checkForUpdates();
+			if (!update) return;
+			IPC.update.versionAvailable(update.updateInfo.version);
+		} catch {
 			IPC.update.checkStopped();
 		}
 	},

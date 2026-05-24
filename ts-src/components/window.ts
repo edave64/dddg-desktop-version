@@ -28,7 +28,7 @@ app.on('window-all-closed', async function () {
 });
 
 function create_menus() {
-	const template = [
+	const menu = Menu.buildFromTemplate([
 		{
 			role: 'quit',
 		},
@@ -37,21 +37,18 @@ function create_menus() {
 			submenu: [
 				{ role: 'reload' },
 				{ type: 'separator' },
-				{ role: 'resetzoom' },
-				{ role: 'zoomin' },
-				{ role: 'zoomout' },
+				{ role: 'resetZoom' },
+				{ role: 'zoomIn' },
+				{ role: 'zoomOut' },
 				{ type: 'separator' },
 				{ role: 'togglefullscreen' },
 			],
 		},
-	];
-
-	const menu = Menu.buildFromTemplate(template);
+	]);
 	Menu.setApplicationMenu(menu);
 }
 
-/** @type {BrowserWindow} */
-let win;
+let win: BrowserWindow | null = null;
 
 export default {
 	open() {
@@ -67,14 +64,12 @@ export default {
 				preload: path.join(app.getAppPath(), 'js-src/preload.js'),
 				contextIsolation: true,
 				enableWebSQL: false,
-				enableRemoteModule: false,
 				nodeIntegration: false,
 				nodeIntegrationInSubFrames: false,
 				nodeIntegrationInWorker: false,
 				devTools: true,
 				webgl: false,
 				defaultEncoding: 'utf-8',
-				worldSafeExecuteJavaScript: false,
 				webviewTag: false,
 				navigateOnDragDrop: false,
 				autoplayPolicy: 'document-user-activation-required',
@@ -109,16 +104,15 @@ export default {
 						},
 					});
 				} else {
-					callback({ responseHeaders: details.responseHeaders });
+					callback({ responseHeaders: { ...details.responseHeaders } });
 				}
 			}
 		);
 
 		// Prevent new links to open in the same tab
-		win.webContents.on('new-window', (event, url) => {
-			event.preventDefault();
-			shell.openExternal(url);
-			//win.loadURL(url);
+		win.webContents.setWindowOpenHandler((details) => {
+			shell.openExternal(details.url);
+			return { action: 'deny' };
 		});
 
 		// Prevent navigation
@@ -131,18 +125,18 @@ export default {
 
 		win.webContents.on('before-input-event', function (e, props) {
 			if (props && props.key === 'I' && props.control) {
-				win.webContents.openDevTools();
+				win!.webContents.openDevTools();
 				e.preventDefault();
 				return false;
 			}
 		});
 
-		win.on('closed', function () {
+		win.on('closed', () => {
 			win = null;
 		});
 
 		win.once('ready-to-show', () => {
-			win.show();
+			win!.show();
 		});
 
 		win.webContents.on('will-redirect', (e) => e.preventDefault());
@@ -156,7 +150,7 @@ export default {
 		});
 
 		IPC.on('reload', () => {
-			win.reload();
+			win!.reload();
 		});
 	},
 
@@ -168,5 +162,5 @@ export default {
 };
 
 export function getWindow() {
-	return win;
+	return win!;
 }

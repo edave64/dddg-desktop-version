@@ -3,9 +3,10 @@ import * as config from '../config.js';
 import { join } from 'path';
 import fs from 'fs';
 
-IPC.onConversation('save-file', async (filename, blob) => {
-	await fs.promises.mkdir(config.downloadPath, { recursive: true });
-	const fullPath = join(config.downloadPath, join('/', filename));
+IPC.onConversation('save-file', async (filename: string, blob: Uint8Array) => {
+	const currentConfig = config.getConfig();
+	await fs.promises.mkdir(currentConfig.downloadPath, { recursive: true });
+	const fullPath = join(currentConfig.downloadPath, join('/', filename));
 	fs.writeFile(fullPath, blob, (err) => {
 		if (!err) {
 			IPC.pushMessage(`File '${fullPath}' successfully saved!`);

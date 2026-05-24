@@ -3,97 +3,68 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import { log } from './logger.js';
 
-/** @type {Electron.WebContents | null} */
-let target;
+let target: Electron.WebContents | null = null;
 
 const IPC = {
 	ready: false,
-	install() {
+	install(): void {
 		log('installing ipc');
 		const ipcFolder = join(import.meta.dirname, './ipc-handlers/');
 		for (const file of readdirSync(ipcFolder)) {
-			import('file://' + join(ipcFolder, file));
+			if (file.endsWith('.js')) {
+				import('file://' + join(ipcFolder, file));
+			}
 		}
 	},
 	/**
 	 * @param {string} text
 	 */
-	pushMessage(text) {
+	pushMessage(text: string): void {
 		send('push-message', text);
 	},
-	updateReady() {
+	updateReady(): void {
 		send('update-ready');
 	},
-	dowloadFolderUpdate(folder) {
+	dowloadFolderUpdate(folder: string): void {
 		send('config.downloadFolderUpdate', folder);
 	},
-	reloadLocalRepo() {
+	reloadLocalRepo(): void {
 		send('reload-repo');
 	},
 	update: {
-		/**
-		 * @param {string} version
-		 */
-		currentVersion(version) {
+		currentVersion(version: string) {
 			send('update.current-version', version);
 		},
-		/**
-		 * @param {string} version
-		 */
-		versionAvailable(version) {
+		versionAvailable(version: string) {
 			send('update.available-version', version);
 		},
-		/**
-		 * @param {number|'done'} percentage
-		 */
-		progress(percentage) {
+		progress(percentage: number | 'done') {
 			send('update.progress', percentage);
 		},
 		checkStopped() {
-			send('update.checkStopped', percentage);
+			send('update.checkStopped');
 		},
 	},
-	/**
-	 * @param {string[]} ids
-	 */
-	autoloadChanged(ids) {
+	autoloadChanged(ids: string[]) {
 		sendConvo('auto-load.changed', ids || []);
 	},
-	/**
-	 * @param {string[]} packIds
-	 */
-	loadContentPacks(packIds) {
+	loadContentPacks(packIds: string[]) {
 		sendConvo('load-packs', packIds);
 	},
-	/**
-	 *
-	 * @param {import('@edave64/doki-doki-dialog-generator-pack-format/dist/v2/model').ContentPack<string>} pack
-	 */
-	replacePack(pack) {
+	replacePack(
+		pack: import('@edave64/doki-doki-dialog-generator-pack-format/dist/v2/jsonFormat.js').JSONContentPack
+	) {
 		log('replace pack', JSON.stringify(pack, undefined, 2));
 		sendConvo('replace-pack', pack);
 	},
-	/**
-	 * @param {string} message
-	 * @param {string[]} answers
-	 * @returns {Promise<string>}
-	 */
-	async resolvableError(message, answers) {
+	async resolvableError(message: string, answers: string[]): Promise<string> {
 		return await sendConvo('resolvable-error', message, answers);
 	},
-	/**
-	 * @param {string} name
-	 * @param {Function} callback
-	 */
-	on(name, callback) {
+	on(name: string, callback: Function): void {
 		receiver(name, callback);
 	},
-	/**
-	 * @param {string} name
-	 * @param {Function} callback
-	 */
-	onConversation(name, callback) {
-		receiver(name, async function (convoId, ...args) {
+	onConversation(name: string, callback: Function): void {
+		receiver(name, async function (convoId: string, ...args: any[]) {
 			try {
 				const ret = await callback(...args);
 				send('convo-answer', convoId, ret);
@@ -104,9 +75,9 @@ const IPC = {
 	},
 };
 
-let pendingSends = [];
+let pendingSends: Array<[string, any[]]> = [];
 
-function sendAllPending() {
+function sendAllPending(): void {
 	const oldPendings = pendingSends;
 	pendingSends = [];
 	for (const pendingSend of oldPendings) {
@@ -115,16 +86,10 @@ function sendAllPending() {
 }
 
 let currentConvoId = 0;
-/**
- * @type {Map<string, {resolve: Function, reject: Function}>}
- */
-const waitingConvos = new Map();
+const waitingConvos: Map<string, { resolve: Function; reject: Function }> =
+	new Map();
 
-/**
- * @param {string} name
- * @param {any[]} params
- */
-function sendConvo(name, ...params) {
+function sendConvo(name: string, ...params: any[]): Promise<any> {
 	const id = 'main-' + currentConvoId;
 	// This is silly unlikely, but whatever
 	if (currentConvoId === Number.MAX_SAFE_INTEGER) {
@@ -139,14 +104,9 @@ function sendConvo(name, ...params) {
 	});
 }
 
-/**
- *
- * @param {string} name
- * @param {any[]} params
- */
-function send(name, ...params) {
+function send(name: string, ...params: any[]) {
 	if (!target) {
-		stuckSends.push([name, params]);
+		pendingSends.push([name, params]);
 		return;
 	}
 
@@ -154,12 +114,7 @@ function send(name, ...params) {
 	return target.send(name, ...params);
 }
 
-/**
- *
- * @param {string} name
- * @param {Function} callback
- */
-function receiver(name, callback) {
+function receiver(name: string, callback: Function): void {
 	log('registering', name);
 	ipcMain.on(name, async (e, ...args) => {
 		log('receiving', name, ...args);
@@ -167,7 +122,7 @@ function receiver(name, callback) {
 		IPC.ready = true;
 		try {
 			await callback(...args);
-		} catch (e) {
+		} catch (e: any) {
 			IPC.pushMessage('Error: ' + e.message);
 			throw e;
 		}
@@ -175,14 +130,16 @@ function receiver(name, callback) {
 	});
 }
 
-receiver('convo-answer', function (id, ret) {
-	if (!waitingConvos.has(id)) return;
-	waitingConvos.get(id).resolve(ret);
+receiver('convo-answer', function (id: string, ret: any) {
+	const convo = waitingConvos.get(id);
+	if (!convo) return;
+	convo.resolve(ret);
 });
 
-receiver('convo-error', function (id, err) {
-	if (!waitingConvos.has(id)) return;
-	waitingConvos.get(id).reject(err);
+receiver('convo-error', function (id: string, err: any) {
+	const convo = waitingConvos.get(id);
+	if (!convo) return;
+	convo.reject(err);
 });
 
 export default IPC;

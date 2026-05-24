@@ -3,7 +3,7 @@ import process from 'process';
 import path from 'path';
 import { log } from './logger.js';
 
-export function openInExplorer(pathToOpen) {
+export function openInExplorer(pathToOpen: string) {
 	let command = null;
 	let args = [];
 	switch (process.platform) {

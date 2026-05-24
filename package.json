@@ -6,12 +6,12 @@
 	"type": "module",
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
-		"test": "npm run lint",
-		"start": "electron .",
-		"pack": "electron-builder --dir",
-		"dist:windows": "electron-builder --windows --x64 --ia32",
-		"dist:linux": "electron-builder --linux --x64 --arm64",
-		"release": "np"
+		"test": "npm run lint && tsgo --no-emit",
+		"start": "tsgo && electron .",
+		"pack": "tsgo && electron-builder --dir",
+		"dist:windows": "tsgo && electron-builder --windows --x64 --ia32",
+		"dist:linux": "tsgo && electron-builder --linux --x64 --arm64",
+		"release": "tsgo && np"
 	},
 	"repository": {
 		"type": "git",
@@ -24,6 +24,7 @@
 	},
 	"homepage": "https://github.com/edave64/dddg-desktop-version#readme",
 	"devDependencies": {
+		"@types/express": "^5.0.6",
 		"@typescript/native-preview": "^7.0.0-dev.20260421.2",
 		"electron": "^42.0.1",
 		"electron-builder": "^26.8.1",

@@ -3,10 +3,7 @@ import { openInExplorer } from '../fileManager.js';
 import * as constants from '../constants.js';
 import * as config from '../config.js';
 
-/**
- * @param {'downloads'|'backgrounds'|'sprites'}
- */
-IPC.on('open-folder', async (kind) => {
+IPC.on('open-folder', async (kind: 'downloads' | 'backgrounds' | 'sprites') => {
 	const currentConfig = config.getConfig();
 	let path;
 	switch (kind) {
