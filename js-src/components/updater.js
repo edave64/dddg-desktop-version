@@ -17,7 +17,9 @@ autoUpdater.signals.updateDownloaded((info) => {
 
 if (currentConfig.autoUpdateCheck) {
 	autoUpdater.autoDownload = true;
-	autoUpdater.checkForUpdatesAndNotify();
+	autoUpdater.checkForUpdatesAndNotify({
+		title: 'Doki Doki Dialog Generator - Update',
+	});
 } else {
 	autoUpdater.autoDownload = false;
 }
