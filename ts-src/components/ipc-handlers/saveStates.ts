@@ -1,6 +1,5 @@
 import { getConfig } from '../config.js';
 import IPC from '../ipc.js';
-import * as packManager from '../packManager.js';
 import fs from 'fs';
 import fsp from 'fs/promises';
 import JSZip from 'jszip';
@@ -144,7 +143,7 @@ IPC.onConversation(
 		const zip = await JSZip.loadAsync(blob);
 		for (const file of Object.values(zip.files)) {
 			await fsp.writeFile(
-				path.join(saveFolder, file.name),
+				path.join(saveFolder, path.join('/', file.name)),
 				await file.async('nodebuffer')
 			);
 		}
@@ -168,5 +167,5 @@ function getSaveFolder(saveName: string): string {
 	if (exportingDefault) {
 		return getConfig().defaultSavePath;
 	}
-	return path.join(getConfig().savesPath, saveName);
+	return path.join(getConfig().savesPath, path.join('/', saveName));
 }
