@@ -35,7 +35,7 @@
 	},
 	"dependencies": {
 		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0",
-		"await-lock": "^2.2.2",
+		"await-lock": "^3.0.0",
 		"chokidar": "^5.0.0",
 		"deepmerge": "^4.3.1",
 		"del": "^8.0.1",

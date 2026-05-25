@@ -13,7 +13,7 @@ import { error } from './logger.js';
 
 const fsp = fs.promises;
 
-const contentPackLock = new AwaitLock.default();
+const contentPackLock = new AwaitLock();
 
 export async function deleteIncompleteInstalls() {
 	await contentPackLock.acquireAsync();
