@@ -111,6 +111,8 @@ export default {
 
 		// Prevent new links to open in the same tab
 		win.webContents.setWindowOpenHandler((details) => {
+			// Allow multiwindow mode
+			if (details.url === 'about:blank') return { action: 'allow' };
 			shell.openExternal(details.url);
 			return { action: 'deny' };
 		});
