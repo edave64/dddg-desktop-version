@@ -1,7 +1,5 @@
 import { join, relative } from 'path';
 
-import * as config from './config.js';
-import fs from 'fs';
 import fsp from 'fs/promises';
 import crypto from 'crypto';
 
@@ -12,8 +10,6 @@ import type { JSONContentPack } from '@edave64/doki-doki-dialog-generator-pack-f
 
 let lastBackgroundWatcherHash: string | null = null;
 let lastSpriteWatcherHash: string | null = null;
-
-const currentConfig = config.getConfig();
 
 export async function triggerBackgroundWatcher(force: boolean = false) {
 	const folder = backgroundsPath;

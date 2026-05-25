@@ -6,9 +6,7 @@ import JSZip from 'jszip';
 import path from 'path';
 import { dialog } from 'electron';
 import { getWindow } from '../window.js';
-
-// save-file collides with the save-file ipc handler! Make this a
-// "saveStates." namespace
+import { safeJoin } from '../../helpers/safePath.js';
 
 IPC.onConversation('save-states.get-all', async () => {
 	try {
@@ -16,8 +14,7 @@ IPC.onConversation('save-states.get-all', async () => {
 		return saves
 			.filter((saveName) => !saveName.startsWith('.'))
 			.map((saveName) => {
-				const stat = fs.statSync(path.join(getConfig().savesPath, saveName));
-
+				const stat = fs.statSync(getSaveFolder(saveName));
 				return {
 					name: saveName,
 					size: stat.size,
@@ -62,13 +59,12 @@ IPC.onConversation(
 	'save-states.file',
 	async (saveName: string, fileName: string, blob: ArrayBuffer) => {
 		const saveFolder = getSaveFolder(saveName);
-		await fsp.writeFile(path.join(saveFolder, fileName), new Uint8Array(blob));
+		await fsp.writeFile(safeJoin(saveFolder, fileName), new Uint8Array(blob));
 	}
 );
 
 IPC.onConversation('save-states.end', async (saveName: string) => {
-	const stat = fs.statSync(path.join(getConfig().savesPath, saveName));
-
+	const stat = fs.statSync(getSaveFolder(saveName));
 	return {
 		name: saveName,
 		size: stat.size,
@@ -86,7 +82,7 @@ IPC.onConversation(
 				.filter((fileName) => !fileName.startsWith('.'))
 				.map(async (fileName) => ({
 					name: fileName,
-					data: (await fsp.readFile(path.join(saveFolder, fileName))).buffer,
+					data: (await fsp.readFile(safeJoin(saveFolder, fileName))).buffer,
 				}))
 		);
 	}
@@ -106,7 +102,7 @@ IPC.onConversation(
 			return Promise.all(
 				files.map(async (fileName) => ({
 					name: fileName,
-					data: (await fsp.readFile(path.join(saveFolder, fileName))).buffer,
+					data: (await fsp.readFile(safeJoin(saveFolder, fileName))).buffer,
 				}))
 			);
 		} catch {
@@ -128,7 +124,7 @@ IPC.onConversation('save-states.download-zip', async (saveName: string) => {
 
 	const zip = new JSZip();
 	for (const fileName of files) {
-		zip.file(fileName, await fsp.readFile(path.join(saveFolder, fileName)));
+		zip.file(fileName, await fsp.readFile(safeJoin(saveFolder, fileName)));
 	}
 	const stream = zip.generateNodeStream({});
 	stream.pipe(fs.createWriteStream(zipPath.filePath));
@@ -143,7 +139,8 @@ IPC.onConversation(
 		const zip = await JSZip.loadAsync(blob);
 		for (const file of Object.values(zip.files)) {
 			await fsp.writeFile(
-				path.join(saveFolder, path.join('/', file.name)),
+				// Prevent malicious zips from breaking out of the save folder
+				safeJoin(saveFolder, file.name),
 				await file.async('nodebuffer')
 			);
 		}
@@ -167,5 +164,5 @@ function getSaveFolder(saveName: string): string {
 	if (exportingDefault) {
 		return getConfig().defaultSavePath;
 	}
-	return path.join(getConfig().savesPath, path.join('/', saveName));
+	return safeJoin(getConfig().savesPath, saveName);
 }
