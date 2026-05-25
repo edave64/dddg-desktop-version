@@ -1,12 +1,12 @@
 /* Preload doesn't support ES modules, so it gets its own build step */
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "declaration": false,
-    "declarationMap": false,
-    "verbatimModuleSyntax": false,
-  },
-  "include": ["ts-src/preload.ts"],
-  "exclude": []
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"module": "commonjs",
+		"declaration": false,
+		"declarationMap": false,
+		"verbatimModuleSyntax": false
+	},
+	"include": ["src/preload.ts"],
+	"exclude": []
 }

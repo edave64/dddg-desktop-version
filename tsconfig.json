@@ -2,7 +2,7 @@
 	// Visit https://aka.ms/tsconfig to read more about this file
 	"compilerOptions": {
 		// File Layout
-		"rootDir": "./ts-src",
+		"rootDir": "src",
 		"outDir": "./js-src",
 
 		// Environment Settings
@@ -40,8 +40,8 @@
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
 		"skipLibCheck": true,
-		"erasableSyntaxOnly": true,
+		"erasableSyntaxOnly": true
 	},
-	"include": ["ts-src/**/*.ts"],
-  	"exclude": ["ts-src/preload.ts"]
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/preload.ts"]
 }
