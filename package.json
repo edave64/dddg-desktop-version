@@ -1,6 +1,6 @@
 {
 	"name": "dddg-desktop-version",
-	"version": "2.6.0",
+	"version": "2.6.1",
 	"description": "The desktop version of DDDG",
 	"main": "js-src/main.js",
 	"type": "module",
@@ -13,6 +13,7 @@
 		"pack": "npm run build && electron-builder --dir",
 		"dist:windows": "npm run build && electron-builder --windows --x64 --ia32",
 		"dist:linux": "npm run build && electron-builder --linux --x64 --arm64",
+		"dist:macos": "npm run build && electron-builder --macos --universal",
 		"release": "npm run build && np"
 	},
 	"repository": {
