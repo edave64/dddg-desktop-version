@@ -36,7 +36,7 @@ jobs:
 
       - shell: bash
         run: |
-          shopt -s extglob globstar
+          shopt -s extglob
           mkdir -p ./dddgWeb
           cp -rv ./main/dist/!(assets) ./dddgWeb/
           mkdir -p ./dddgWeb/assets
