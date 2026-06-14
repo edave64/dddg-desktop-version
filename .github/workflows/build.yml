@@ -27,6 +27,10 @@ jobs:
           repository: edave64/Doki-Doki-Dialog-Generator
           ref: main
           path: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/public/assets/**/*
 
       - name: Checkout asset repo
         uses: actions/checkout@v5
@@ -34,6 +38,11 @@ jobs:
           repository: edave64/dddg-assets
           ref: gh-pages
           path: assets
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /v2/
+            !/v2/assets/**/*.png
+            !/v2/assets/**/*.lq.webp
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v6
