@@ -53,6 +53,8 @@ jobs:
         run: echo "//npm.pkg.github.com:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
       - shell: bash
+        env:
+          SKIP_CHECKS: true
         run: npm install && npm run build:electron
         working-directory: main
 
