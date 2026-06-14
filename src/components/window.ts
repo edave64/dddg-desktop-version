@@ -1,13 +1,11 @@
-const { app, Menu, BrowserWindow, shell, nativeTheme } = require('electron');
-const path = require('path');
-const url = require('url');
-const { port } = require('./constants');
-const IPC = require('./ipc');
-const { deleteIncompleteInstalls } = require('./packManager');
-const {
-	triggerSpriteWatcher,
-	triggerBackgroundWatcher,
-} = require('./watchers');
+import { app, Menu, BrowserWindow, shell, nativeTheme } from 'electron';
+import path from 'path';
+import url from 'url';
+import { port } from './constants.js';
+import IPC from './ipc.js';
+import { deleteIncompleteInstalls } from './packManager.js';
+import { triggerSpriteWatcher, triggerBackgroundWatcher } from './watchers.js';
+import { error, log } from './logger.js';
 
 const WINDOW_WIDTH = 1280 + 168;
 const WINDOW_HEIGHT = 720;
@@ -23,14 +21,14 @@ app.on('window-all-closed', async function () {
 	try {
 		await deleteIncompleteInstalls();
 	} catch (e) {
-		console.error(e);
+		error(e);
 	}
-	console.log('quitting.');
+	log('quitting.');
 	if (process.platform !== 'darwin') app.quit();
 });
 
 function create_menus() {
-	const template = [
+	const menu = Menu.buildFromTemplate([
 		{
 			role: 'quit',
 		},
@@ -39,23 +37,20 @@ function create_menus() {
 			submenu: [
 				{ role: 'reload' },
 				{ type: 'separator' },
-				{ role: 'resetzoom' },
-				{ role: 'zoomin' },
-				{ role: 'zoomout' },
+				{ role: 'resetZoom' },
+				{ role: 'zoomIn' },
+				{ role: 'zoomOut' },
 				{ type: 'separator' },
 				{ role: 'togglefullscreen' },
 			],
 		},
-	];
-
-	const menu = Menu.buildFromTemplate(template);
+	]);
 	Menu.setApplicationMenu(menu);
 }
 
-/** @type {BrowserWindow} */
-let win;
+let win: BrowserWindow | null = null;
 
-module.exports = {
+export default {
 	open() {
 		win = new BrowserWindow({
 			width: WINDOW_WIDTH,
@@ -63,20 +58,18 @@ module.exports = {
 			resizable: true,
 			icon:
 				process.platform === 'win32'
-					? path.join(__dirname, '../favicon.ico')
-					: path.join(__dirname, '../favicon.png'),
+					? path.join(import.meta.dirname, '../../favicon.ico')
+					: path.join(import.meta.dirname, '../../favicon.png'),
 			webPreferences: {
-				preload: path.join(app.getAppPath(), 'preload.js'),
+				preload: path.join(app.getAppPath(), 'js-src/preload.js'),
 				contextIsolation: true,
 				enableWebSQL: false,
-				enableRemoteModule: false,
 				nodeIntegration: false,
 				nodeIntegrationInSubFrames: false,
 				nodeIntegrationInWorker: false,
 				devTools: true,
 				webgl: false,
 				defaultEncoding: 'utf-8',
-				worldSafeExecuteJavaScript: false,
 				webviewTag: false,
 				navigateOnDragDrop: false,
 				autoplayPolicy: 'document-user-activation-required',
@@ -111,40 +104,41 @@ module.exports = {
 						},
 					});
 				} else {
-					callback({ responseHeaders: details.responseHeaders });
+					callback({ responseHeaders: { ...details.responseHeaders } });
 				}
 			}
 		);
 
 		// Prevent new links to open in the same tab
-		win.webContents.on('new-window', (event, url) => {
-			event.preventDefault();
-			shell.openExternal(url);
-			//win.loadURL(url);
+		win.webContents.setWindowOpenHandler((details) => {
+			// Allow multiwindow mode
+			if (details.url === 'about:blank') return { action: 'allow' };
+			shell.openExternal(details.url);
+			return { action: 'deny' };
 		});
 
 		// Prevent navigation
 		win.webContents.on('will-navigate', (event, url) => {
 			event.preventDefault();
 			if (url === serverUrl) return;
-			console.log(event, url);
+			log(event, url);
 			shell.openExternal(url);
 		});
 
 		win.webContents.on('before-input-event', function (e, props) {
 			if (props && props.key === 'I' && props.control) {
-				win.webContents.openDevTools();
+				win!.webContents.openDevTools();
 				e.preventDefault();
 				return false;
 			}
 		});
 
-		win.on('closed', function () {
+		win.on('closed', () => {
 			win = null;
 		});
 
 		win.once('ready-to-show', () => {
-			win.show();
+			win!.show();
 		});
 
 		win.webContents.on('will-redirect', (e) => e.preventDefault());
@@ -158,7 +152,7 @@ module.exports = {
 		});
 
 		IPC.on('reload', () => {
-			win.reload();
+			win!.reload();
 		});
 	},
 
@@ -168,3 +162,7 @@ module.exports = {
 		return win;
 	},
 };
+
+export function getWindow() {
+	return win!;
+}

@@ -1,8 +1,9 @@
-const childProcess = require('child_process');
-const process = require('process');
-const path = require('path');
+import childProcess from 'child_process';
+import process from 'process';
+import path from 'path';
+import { log } from './logger.js';
 
-module.exports = function openInExplorer(pathToOpen) {
+export function openInExplorer(pathToOpen: string) {
 	let command = null;
 	let args = [];
 	switch (process.platform) {
@@ -23,6 +24,6 @@ module.exports = function openInExplorer(pathToOpen) {
 			break;
 	}
 	if (!command) return;
-	console.log('Executing command', command, args);
+	log('Executing command', command, args);
 	childProcess.execFile(command, args);
-};
+}
