@@ -51,7 +51,7 @@ jobs:
         run: |
           cp -r ./main/dist ./dddgWeb
           cp -r ./assets/v2/** ./dddgWeb/
-          rm -f ./dddgWeb/assets/**/*.lq.webp ./dddgWeb/assets/**/*.png
+          find ./dddgWeb/assets -type f \( -name '*.lq.webp' -o -name '*.png' \) -delete
           rm -rf main
           rm -rf assets
 
