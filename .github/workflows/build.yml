@@ -4,7 +4,13 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest
+            script: dist:macos
+          - os: ubuntu-latest
+            script: dist:linux
+          - os: windows-latest
+            script: dist:windows
 
     runs-on: ${{ matrix.os }}
 
@@ -50,16 +56,13 @@ jobs:
           rm -rf main
           rm -rf assets
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
+      - name: Install desktop app dependencies
+        shell: bash
+        run: npm ci
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - name: Build Electron app
+        shell: bash
+        run: npm run ${{ matrix.script }}
 
       - shell: bash
         run: ls
