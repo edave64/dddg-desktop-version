@@ -1,0 +1,93 @@
+name: Build
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+jobs:
+  release:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            script: dist:macos
+          - os: ubuntu-latest
+            script: dist:linux
+          - os: windows-latest
+            script: dist:windows
+
+    runs-on: ${{ matrix.os }}
+
+    permissions:
+      packages: read
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v5
+
+      - name: Checkout base repo
+        uses: actions/checkout@v5
+        with:
+          repository: edave64/Doki-Doki-Dialog-Generator
+          ref: main
+          path: main
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/public/assets/**/*
+
+      - name: Checkout asset repo
+        uses: actions/checkout@v5
+        with:
+          repository: edave64/dddg-assets
+          ref: gh-pages
+          path: assets
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /v2/
+            !/v2/assets/**/*.png
+            !/v2/assets/**/*.lq.webp
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - shell: bash
+        run: echo "//npm.pkg.github.com:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - shell: bash
+        env:
+          SKIP_CHECKS: true
+        run: npm install && npm run build:electron
+        working-directory: main
+
+      - shell: bash
+        run: |
+          cp -r ./main/dist ./dddgWeb
+          cp -r ./assets/v2/** ./dddgWeb/
+          find ./dddgWeb/assets -type f \( -name '*.lq.webp' -o -name '*.png' \) -delete
+          rm -rf main
+          rm -rf assets
+
+      - name: Install desktop app dependencies
+        shell: bash
+        run: npm ci
+
+      - name: Build Electron app
+        shell: bash
+        run: npm run ${{ matrix.script }} -- --publish never
+
+      - shell: bash
+        run: ls
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist ${{ matrix.os }}
+          path: |
+            dist/*.exe
+            dist/*.exe.blockmap
+            dist/*.dmg
+            dist/*.dmg.blockmap
+            dist/*.AppImage
+            dist/latest*.yml
