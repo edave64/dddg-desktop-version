@@ -13,17 +13,17 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Checkout base repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           repository: edave64/Doki-Doki-Dialog-Generator
           ref: main
           path: main
 
       - name: Checkout asset repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           repository: edave64/dddg-assets
           ref: gh-pages
