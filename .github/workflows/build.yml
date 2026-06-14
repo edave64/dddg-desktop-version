@@ -28,6 +28,9 @@ jobs:
           node-version: 24
 
       - shell: bash
+        run: echo "//npm.pkg.github.com:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - shell: bash
         run: npm install && npm run build:electron
         working-directory: main
 
@@ -36,9 +39,6 @@ jobs:
 
       - shell: bash
         run: rm -rf main
-
-      - shell: bash
-        run: echo "//npm.pkg.github.com:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
