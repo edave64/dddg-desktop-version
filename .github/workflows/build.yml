@@ -36,14 +36,9 @@ jobs:
 
       - shell: bash
         run: |
-          shopt -s extglob
-          mkdir -p ./dddgWeb
-          cp -rv ./main/dist/!(assets) ./dddgWeb/
-          mkdir -p ./dddgWeb/assets
-          cp -rv ./main/dist/assets/!(*.lq.webp|*.png) ./dddgWeb/assets/
-
-      - shell: bash
-        run: rm -rf main
+          cp -r ./main/dist ./dddgWeb
+          rm -f ./dddgWeb/assets/**/*.lq.webp ./dddgWeb/assets/**/*.png
+          rm -rf main
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
