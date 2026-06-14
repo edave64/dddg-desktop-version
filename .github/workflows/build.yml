@@ -35,7 +35,7 @@ jobs:
         working-directory: main
 
       - shell: bash
-        run: rsync -av --delete --exclude=assets/**.lq.webp --exclude=assets/**.png ./main/dist/ ../desktop/dddgWeb/
+        run: rsync -av --delete --exclude=assets/**.lq.webp --exclude=assets/**.png ./main/dist/ ./dddgWeb/
 
       - shell: bash
         run: rm -rf main
