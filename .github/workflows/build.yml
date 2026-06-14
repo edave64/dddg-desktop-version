@@ -1,14 +1,17 @@
 name: Build
-on: push
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
 jobs:
   release:
     strategy:
       matrix:
         include:
-          #          - os: macos-latest
-          #            script: dist:macos
-          #          - os: ubuntu-latest
-          #            script: dist:linux
+          - os: macos-latest
+            script: dist:macos
+          - os: ubuntu-latest
+            script: dist:linux
           - os: windows-latest
             script: dist:windows
 
@@ -65,12 +68,6 @@ jobs:
           find ./dddgWeb/assets -type f \( -name '*.lq.webp' -o -name '*.png' \) -delete
           rm -rf main
           rm -rf assets
-
-      - name: Test
-        uses: actions/upload-artifact@v7
-        with:
-          name: test ${{ matrix.os }}
-          path: '.'
 
       - name: Install desktop app dependencies
         shell: bash
