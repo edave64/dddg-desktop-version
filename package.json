@@ -47,6 +47,7 @@
 	"build": {
 		"appId": "org.xcvbnm.dddg",
 		"productName": "Doki Doki Dialog Generator",
+		"artifactName": "Doki-Doki-Dialog-Generator-${version}-${arch}-${os}.${ext}",
 		"mac": {
 			"category": "public.app-category.games",
 			"darkModeSupport": false
@@ -79,6 +80,7 @@
 			"category": "Game;Graphics"
 		},
 		"win": {
+			"artifactName": "Doki-Doki-Dialog-Generator-${version}-${arch}.${ext}",
 			"target": [
 				{
 					"target": "nsis",
