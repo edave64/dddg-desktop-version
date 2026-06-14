@@ -50,7 +50,6 @@ jobs:
       - shell: bash
         run: |
           cp -r ./main/dist ./dddgWeb
-          rm -rf ./dddgWeb/assets
           cp -r ./assets/v2/** ./dddgWeb/
           rm -f ./dddgWeb/assets/**/*.lq.webp ./dddgWeb/assets/**/*.png
           rm -rf main
