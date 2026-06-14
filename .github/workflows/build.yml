@@ -62,7 +62,7 @@ jobs:
 
       - name: Build Electron app
         shell: bash
-        run: npm run ${{ matrix.script }}
+        run: npm run ${{ matrix.script }} -- --publish never
 
       - shell: bash
         run: ls
