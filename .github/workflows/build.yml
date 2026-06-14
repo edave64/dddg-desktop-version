@@ -22,6 +22,13 @@ jobs:
           ref: main
           path: main
 
+      - name: Checkout asset repo
+        uses: actions/checkout@v3
+        with:
+          repository: edave64/dddg-assets
+          ref: gh-pages
+          path: assets
+
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v6
         with:
@@ -37,8 +44,11 @@ jobs:
       - shell: bash
         run: |
           cp -r ./main/dist ./dddgWeb
+          rm -rf ./dddgWeb/assets
+          cp -r ./assets/v2/** ./dddgWeb/
           rm -f ./dddgWeb/assets/**/*.lq.webp ./dddgWeb/assets/**/*.png
           rm -rf main
+          rm -rf assets
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
