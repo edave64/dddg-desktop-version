@@ -88,5 +88,7 @@ jobs:
             dist/*.exe.blockmap
             dist/*.dmg
             dist/*.dmg.blockmap
+            dist/*-mac.zip
+            dist/*-mac.zip.blockmap
             dist/*.AppImage
             dist/latest*.yml
