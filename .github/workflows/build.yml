@@ -15,12 +15,12 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Checkout web repo
+      - name: Checkout base repo
         uses: actions/checkout@v3
         with:
           repository: edave64/Doki-Doki-Dialog-Generator
-          ref: gh-pages
-          path: gh-pages
+          ref: main
+          path: main
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v6
@@ -28,16 +28,14 @@ jobs:
           node-version: 24
 
       - shell: bash
-        run: cp -r gh-pages/release dddgWeb
+        run: npm install && npm run build:electron
+        working-directory: main
 
       - shell: bash
-        run: rm -rf gh-pages
+        run: rsync -av --delete --exclude=assets/**.lq.webp --exclude=assets/**.png ./main/dist/ ../desktop/dddgWeb/
 
       - shell: bash
-        run: find ./dddgWeb/assets/ -name "*.png" -type f -delete
-
-      - shell: bash
-        run: find ./dddgWeb/assets/ -name "*.lq.webp" -delete
+        run: rm -rf main
 
       - shell: bash
         run: echo "//npm.pkg.github.com:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
