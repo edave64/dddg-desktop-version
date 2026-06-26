@@ -32,6 +32,10 @@ async function loadRepoFiles(): Promise<
 	return (
 		await Promise.all(
 			folders.map(async (folder) => {
+				const lowerFolder = folder.toLowerCase();
+				if (lowerFolder === '.ds_store') return null;
+				if (lowerFolder === 'desktop.ini') return null;
+
 				try {
 					const packFolder = join(constants.localRepoPath, folder);
 					try {
