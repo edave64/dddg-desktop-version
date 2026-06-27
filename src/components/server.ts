@@ -102,7 +102,7 @@ server.use('/repo/people.json', async (req, res) => {
 		log(files);
 
 		for (const file of files) {
-			authors = deepmerge(authors, file.authors);
+			authors = deepmerge(authors, file.authors ?? {});
 		}
 
 		res.json(authors);
