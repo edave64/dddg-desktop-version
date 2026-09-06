@@ -14,7 +14,10 @@ IPC.on(
 		IPC.autoloadChanged(currentConfig.autoLoad);
 		IPC.loadContentPacks(currentConfig.autoLoad);
 		IPC.dowloadFolderUpdate(currentConfig.downloadPath);
-		triggerBackgroundWatcher(true);
-		triggerSpriteWatcher(true);
 	}
 );
+
+IPC.onConversation('load-env-packs', async () => {
+	await triggerBackgroundWatcher(true);
+	await triggerSpriteWatcher(true);
+});
