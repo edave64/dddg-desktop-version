@@ -30,6 +30,7 @@ const channelWhitelist = [
 	'repo.uninstall',
 	'reload-repo',
 	'init-dddg',
+	'load-env-packs',
 	'replace-pack',
 	'resolvable-error',
 	'save-file',
