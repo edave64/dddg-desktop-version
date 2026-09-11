@@ -9,8 +9,6 @@ import { ipcRenderer, contextBridge } from 'electron';
 require = null;
 
 const channelWhitelist = [
-	'add-persistent-content-pack',
-	'add-persistent-background',
 	'push-message',
 	'prompt-answered',
 	'update.current-version',
