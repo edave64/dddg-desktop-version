@@ -1,6 +1,6 @@
 {
 	"name": "dddg-desktop-version",
-	"version": "2.6.3",
+	"version": "2.6.4",
 	"description": "The desktop version of DDDG",
 	"main": "js-src/main.js",
 	"type": "module",
@@ -35,7 +35,7 @@
 		"prettier": "^3.8.3"
 	},
 	"dependencies": {
-		"@edave64/doki-doki-dialog-generator-pack-format": "^2.0.0",
+		"@edave64/doki-doki-dialog-generator-pack-format": "^2.1.0",
 		"await-lock": "^3.0.0",
 		"chokidar": "^5.0.0",
 		"deepmerge": "^4.3.1",
